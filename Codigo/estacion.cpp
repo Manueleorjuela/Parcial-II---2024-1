@@ -9,7 +9,10 @@ Estacion::Estacion(string Nombre_Estacion, bool Es_No_De_Transferencia)
 
 Estacion::Estacion()
 {
-
+    Nombre = "No tiene nombre";
+    Transferencia = false;
+    Tiempo_Anterior = 0;
+    Tiempo_Posterior = 0;
 }
 
 string Estacion::Get_Nombre()
