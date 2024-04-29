@@ -3,13 +3,16 @@
 int main()
 {
     Red_Metro Metro;
-    cout <<  Metro.Get_Tamaño() << endl;
 
-    Metro.Añadir_Linea();
+    for (int i = 0; i < 2; i++){
+        Metro.Añadir_Linea();
+    }
+
     Metro.Mostrar_Lineas();
-    cout <<  Metro.Get_Tamaño() << endl;
+
 
     Metro.Eliminar_Linea();
-    Metro.Mostrar_Lineas();
-    cout <<  Metro.Get_Tamaño() << endl;
+    Metro.Eliminar_Linea();
+    Metro.Eliminar_Linea();
+
 }

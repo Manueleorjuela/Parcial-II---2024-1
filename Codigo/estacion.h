@@ -14,6 +14,8 @@ private:
     int Tiempo_Anterior;
     int Tiempo_Posterior;
 
+
+
 public:
 
     Estacion(string Nombre_Estacion, bool Es_No_De_Transferencia);

@@ -87,8 +87,12 @@ bool Linea::Verificacion_Estacion_Transferencia(int Posicion)
 Linea::Linea(string Nombre_Linea, int Tamaño_Linea)
 {
     Nombre = Nombre_Linea;
-    Tamaño = Tamaño_Linea;
-    Linea_ = new Estacion[Tamaño];
+    if (Tamaño_Linea > 0) {
+        Tamaño = Tamaño_Linea;
+        Linea_ = new Estacion[Tamaño];
+    } else {
+        Linea_ = nullptr;
+    }
 }
 
 Linea::Linea()
@@ -144,6 +148,7 @@ void Linea::Eliminar_Estacion()
     else cout << endl << "No se puede eliminar la estacion" << endl;
 }
 
+
 int Linea::GetTamaño()
 {
     return Tamaño;
@@ -163,3 +168,4 @@ Linea::~Linea()
 {
     delete[] Linea_;
 }
+

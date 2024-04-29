@@ -27,7 +27,6 @@ public:
     void Añadir_Estacion();
     void Eliminar_Estacion();
 
-
     int GetTamaño();
     string Get_Nombre();
     Estacion *Get_Linea();

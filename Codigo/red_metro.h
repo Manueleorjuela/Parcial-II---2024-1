@@ -12,13 +12,16 @@ private:
     //Validaciones
     string Verificar_Nombre_Linea();
     bool Verificar_Estacion_Transferencia(int Posicion_Linea);
-    //int Mostrar_Lineas();
+
+    int Seleccionar_();
+
 
 public:
+
     Red_Metro();
-    int Mostrar_Lineas();
     void Añadir_Linea();
     void Eliminar_Linea();
+    void Mostrar_Lineas();
 
     int Get_Tamaño();
 };
