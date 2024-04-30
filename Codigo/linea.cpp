@@ -1,30 +1,25 @@
 #include "linea.h"
 
-string Linea::Existencia_Estacion()
+bool Linea::Existencia_Estacion(string &Nombre_Estacion)
 {
-    string Nombre_Estacion;
-    bool Existe = true;
+    bool Existe = false;
+    cout << endl << "Ingrese el nombre de la nueva estacion: ";
+    cin.ignore();
+    getline(cin, Nombre_Estacion);
+    Nombre_Estacion += " " + Nombre;
 
-
-    while (Existe) {
-        cout << "Ingrese el nombre de la nueva estacion: ";
-        getline(cin, Nombre_Estacion);
-
-        if (Tamaño == 0){
-            break;
-        }else{
-            for (int i = 0; i < Tamaño; i++) {
-                if (Linea_[i].Get_Nombre() == Nombre_Estacion) {
-                    cout << "La estacion ya existe en la linea, pruebe con otro." << endl;
-                    break;
-
-                }else Existe = false;
-        }
-        if (!Existe) break;
+    if (Linea_ == nullptr){
+        cout << "Por el momento, la estacion que anadira es la unica en la linea." << endl;
+    }
+    else{
+        for (int i = 0; i < Tamaño; i++) {
+            if (Linea_[i].Get_Nombre() == Nombre_Estacion) {
+                Existe = true;
+                break;
+            }
         }
     }
-
-    return Nombre_Estacion;
+    return Existe;
 }
 
 bool Linea::Verificacion_Transferencia()
@@ -50,28 +45,37 @@ bool Linea::Verificacion_Transferencia()
     return static_cast<bool>(Transferencia);
 }
 
-int Linea::Mostrar_Estaciones()
+int Linea::Seleccionar_Añadir()
 {
-    int Posicion;
-    cout <<endl << "Estaciones presentes en la linea: " << endl;
-
-    if (Tamaño == 0){
-        cout << "La linea no tiene estaciones por el momento." << endl;
-        Posicion = 1;
-
-    }else{
-        for (int i = 0; i < Tamaño; i++){
-            cout << i+1 << ". " << Linea_[i].Get_Nombre() << endl;
-    }
-        while (true){
-            cout << "Seleccione la posicion en la cual quiere realizar los cambios: ";
+    Mostrar_Estaciones();
+    int Posicion = 0;
+    if (Linea_ != nullptr){
+        while(true){
+            cout << "\nTeniendo en cuenta lo siguiente: \n.Ingrese 1 si desea que la estacion se ubique al inicio de la linea.";
+            cout << "\n.Ingrese cualquier indice mostrado si desea que la nueva estacion se ubique en esa posicion.";
+            cout << "\n.Ingrese el indice mayor + 1 si desea que la nueva estacion se ubique al final de la linea.";
+            cout << "\nSeleeciona la ubicacion de la estacion en la linea: ";
             cin >> Posicion;
-            if (Posicion < 1 || Posicion > Tamaño){
-                cout <<endl<<"Ubicacion no valida, intente de nuevo."<< endl;
+            if (Posicion < 1 || Posicion > Tamaño+1){
+                cout <<"Ubicacion no valida, intente de nuevo."<< endl;
             }else break;
         }
+        Posicion -=1;
     }
+    return Posicion;
+}
 
+int Linea::Seleccionar_Eliminar()
+{
+    Mostrar_Estaciones();
+    int Posicion = 0;
+    while(true){
+        cout << "\nSeleeciona la ubicacion de la estacion en la linea: ";
+        cin >> Posicion;
+        if (Posicion < 1 || Posicion > Tamaño){
+            cout <<"Ubicacion no valida, intente de nuevo."<< endl;
+        }else break;
+    }
     Posicion -=1;
     return Posicion;
 }
@@ -84,51 +88,69 @@ bool Linea::Verificacion_Estacion_Transferencia(int Posicion)
     return Transferencia;
 }
 
+void Linea::Mostrar_Estaciones()
+{
+    cout <<endl << "Estaciones presentes en la linea: " << endl;
+
+    if (Linea_ == nullptr){
+        cout <<"La linea aun no tiene estaciones, la ingresada se anadira en la posicion inicial." << endl;
+    }else{
+        for (int i = 0; i < Tamaño; i++){
+        cout << i+1 << ". " << Linea_[i].Get_Nombre() << endl;
+        }
+    }
+}
+
 Linea::Linea(string Nombre_Linea, int Tamaño_Linea)
 {
     Nombre = Nombre_Linea;
+
     if (Tamaño_Linea > 0) {
         Tamaño = Tamaño_Linea;
         Linea_ = new Estacion[Tamaño];
     } else {
         Linea_ = nullptr;
     }
+    Tamaño =  Tamaño_Linea;
 }
 
 Linea::Linea()
 {
-
+    Nombre = "No tiene nombre";
+    Tamaño = 0;
+    Linea_ = nullptr;
 }
 
 void Linea::Añadir_Estacion()
 {
-    string Nombre_Estacion = Existencia_Estacion();
-    Nombre_Estacion += " " + Nombre;
-    bool Es_De_Transferencia = Verificacion_Transferencia();
-    int Posicion = Mostrar_Estaciones();
-    //int Tiempo_Anterior;
-    //int Tiempo_Posterior;
+    string Nombre_Estacion;
+    bool Existe = Existencia_Estacion(Nombre_Estacion);
+    if(!Existe){
+        bool Es_De_Transferencia = Verificacion_Transferencia();
+        int Posicion = Seleccionar_Añadir();
+        Tamaño += 1;
 
-
-    Tamaño += 1;
-    Estacion *Actualizacion = new Estacion[Tamaño];
-
-    for (int i = 0; i < Tamaño; i++) {
-        if (i < Posicion) {
-            Actualizacion[i] = Linea_[i];
-        } else if (i == Posicion) {
-            Actualizacion[i] = Estacion(Nombre_Estacion, Es_De_Transferencia);
-        } else {
-            Actualizacion[i] = Linea_[i - 1];
+        Estacion *Actualizacion = new Estacion[Tamaño];
+        for (int i = 0; i < Tamaño; i++) {
+            if (i < Posicion) {
+                Actualizacion[i] = Linea_[i];
+            }else if (i == Posicion) {
+                Actualizacion[i] = Estacion(Nombre_Estacion, Es_De_Transferencia);
+            }else {
+                Actualizacion[i] = Linea_[i - 1];
+            }
         }
+        delete [] Linea_;
+        Linea_ = Actualizacion;
     }
-    delete [] Linea_;
-    Linea_ = Actualizacion;
+    else{
+        Error1_EstacionEncontrada();
+    }
 }
 
 void Linea::Eliminar_Estacion()
 {
-    int Posicion = Mostrar_Estaciones();
+    int Posicion = Seleccionar_Eliminar();
     bool Es_De_Transferencia = Verificacion_Estacion_Transferencia(Posicion);
 
     if (!Es_De_Transferencia){
@@ -145,9 +167,8 @@ void Linea::Eliminar_Estacion()
         delete [] Linea_;
         Linea_ = Actualizacion;
     }
-    else cout << endl << "No se puede eliminar la estacion" << endl;
+    else Error2_EstacionDeTransferenciaEncontrada();
 }
-
 
 int Linea::GetTamaño()
 {
@@ -169,3 +190,20 @@ Linea::~Linea()
     delete[] Linea_;
 }
 
+void Linea::Error1_EstacionEncontrada()
+{
+    try {
+        throw runtime_error("La estacion ingresada ya esta almacenada en la linea.");
+    } catch (const runtime_error& ex) {
+        cout << "Error: " << ex.what() << endl;
+    }
+}
+
+void Linea::Error2_EstacionDeTransferenciaEncontrada()
+{
+    try {
+        throw runtime_error("La estacion ingresada es de transferencia, no puede eliminarse.");
+    } catch (const runtime_error& ex) {
+        cout << "Error: " << ex.what() << endl;
+    }
+}

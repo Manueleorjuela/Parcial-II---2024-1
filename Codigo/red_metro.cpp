@@ -5,12 +5,13 @@ string Red_Metro::Verificar_Nombre_Linea()
     string Nombre_Linea;
     bool Existe = true;
 
+
     while (Existe) {
         cout << endl << "Ingrese el nombre de la nueva linea: ";
         getline(cin, Nombre_Linea);
 
-        if (Tamaño == 0){
-            cout << endl << "Por el momento, la linea que anadira es la unica en la red" << endl;
+        if (Metro == nullptr){
+            cout << "Por el momento, la linea que anadira es la unica en la red." << endl;
             break;
         }else{
             for (int i = 0; i < Tamaño; i++) {
@@ -31,13 +32,16 @@ bool Red_Metro::Verificar_Estacion_Transferencia(int Posicion_Linea)
     int Dimension_Linea = Metro[Posicion_Linea].GetTamaño();
     Estacion *Evaluar = Metro[Posicion_Linea].Get_Linea();
 
-    if (Evaluar != nullptr){
-        for (int i = 0; i < Dimension_Linea; i++){
-            if (Evaluar[i].Get_Transferencia() == true) break;
-        }
-    }else{
-        cout << "La linea no tiene estaciones aun." << endl;
+
+
+
+    for (int i = 0; i < Dimension_Linea; i++){
+        if (Evaluar[i].Get_Transferencia() == true){
+            Existe = true;
+            break;
+        };
     }
+
     return Existe;
 }
 
@@ -54,14 +58,31 @@ void Red_Metro::Mostrar_Lineas()
     }
 }
 
+void Red_Metro::Añadir_Estacion()
+{
+    if (Metro == nullptr) Error3_RedVacia();
+    else{
+        int Posicion = Seleccionar_();
+        Metro[Posicion].Añadir_Estacion();
+    }
+}
+
+void Red_Metro::Eliminar_Estacion()
+{
+    int Posicion = Seleccionar_();
+    if (Metro == nullptr) Error3_RedVacia();
+    else{
+        if (Metro[Posicion].Get_Linea() == nullptr) Error1_LineaVacia();
+        else Metro[Posicion].Eliminar_Estacion();
+    }
+}
+
 int Red_Metro::Seleccionar_()
 {
     Mostrar_Lineas();
-
     int Posicion;
-
     while (true){
-           cout << "Seleccione la posicion en la cual quiere realizar los cambios: ";
+           cout << endl<<"Seleccione la posicion en la cual quiere realizar los cambios: ";
            cin >> Posicion;
            if (Posicion < 1 || Posicion > Tamaño){
                 cout <<endl<<"Ubicacion no valida, intente de nuevo."<< endl;
@@ -69,7 +90,7 @@ int Red_Metro::Seleccionar_()
         }
 
     Posicion -=1;
-    return Posicion;
+        return Posicion;
 }
 
 Red_Metro::Red_Metro()
@@ -83,9 +104,7 @@ void Red_Metro::Añadir_Linea()
     string Nombre_Linea = Verificar_Nombre_Linea();
 
     Tamaño += 1;
-
     Linea *Actualizacion = new Linea[Tamaño];
-
 
     for (int i = 0; i < Tamaño - 1; i++) {
         Actualizacion[i] = Metro[i];
@@ -95,6 +114,7 @@ void Red_Metro::Añadir_Linea()
     delete[] Metro;
     Actualizacion[Tamaño - 1] = Linea(Nombre_Linea, 0);
     Metro = Actualizacion;
+
 }
 
 void Red_Metro::Eliminar_Linea()
@@ -103,16 +123,13 @@ void Red_Metro::Eliminar_Linea()
     bool Existencia_Transferencia;
     Linea * Actualizacion;
 
-    if (Tamaño == 0){
-        cout << endl << "No puedes eliminar lineas, no existe ninguna." << endl;
+    if (Metro == nullptr){
+        Error3_RedVacia();
     }
     else{
-
         Posicion = Seleccionar_();
-
         Existencia_Transferencia = Verificar_Estacion_Transferencia(Posicion);
-
-        if (Existencia_Transferencia) cout << endl << "No se puede eliminar la linea, existe una estacion de transferencia asociada." << endl;
+        if (Existencia_Transferencia) Error2_EstacionTransferenciaEncontrada();
         else{
             Tamaño -=1;
             Actualizacion = new Linea[Tamaño];
@@ -134,3 +151,29 @@ int Red_Metro::Get_Tamaño()
     return Tamaño;
 }
 
+void Red_Metro::Error1_LineaVacia()
+{
+    try {
+        throw runtime_error("La linea ingresada no contiene ninguna estacion.");
+    } catch (const runtime_error& ex) {
+        cout << "Error: " << ex.what() << endl;
+    }
+}
+
+void Red_Metro::Error2_EstacionTransferenciaEncontrada()
+{
+    try {
+        throw runtime_error("La linea ingresada contiene una estacion de transferencia, no puede eliminarse.");
+    } catch (const runtime_error& ex) {
+        cout << "Error: " << ex.what() << endl;
+    }
+}
+
+void Red_Metro::Error3_RedVacia()
+{
+    try {
+        throw runtime_error("No existen lineas en la red.");
+    } catch (const runtime_error& ex) {
+        cout << "Error: " << ex.what() << endl;
+    }
+}
