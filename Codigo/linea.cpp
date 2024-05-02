@@ -1,19 +1,17 @@
 #include "linea.h"
 
-bool Linea::Existencia_Estacion(string &Nombre_Estacion)
+bool Linea::Validacion_Error1(string &Nombre_Estacion)
 {
     bool Existe = false;
     cout << endl << "Ingrese el nombre de la nueva estacion: ";
     getline(cin, Nombre_Estacion);
     Nombre_Estacion += " " + Nombre;
 
-    if (Linea_ == nullptr){
-        cout << "Por el momento, la estacion que anadira es la unica en la linea." << endl;
-    }
-    else{
+    if(!Validacion_Linea_Vacia(0)) {
         for (int i = 0; i < Tamaño; i++) {
             if (Linea_[i].Get_Nombre() == Nombre_Estacion) {
                 Existe = true;
+                Error1_EstacionRepetida();
                 break;
             }
         }
@@ -21,101 +19,107 @@ bool Linea::Existencia_Estacion(string &Nombre_Estacion)
     return Existe;
 }
 
-bool Linea::Verificacion_Transferencia()
+bool Linea::Validacion_Linea_Vacia(int Case)
 {
-    int Transferencia;
-    while (true) {
-        cout << endl << "De acuerdo a lo siguiente:" << endl;
-        cout << "Ingrese 1 para indicar que la estacion es de transferencia." << endl;
-        cout << "Ingrese 0 para indicar que la estacion no es de transferencia." << endl;
-        cout << "Ingrese una opcion: ";
-        if (!(cin >> Transferencia)) {
-            cout << "Entrada invalida. Por favor, ingrese un valor numerico (0 o 1)." << endl;
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            continue;
-        }
-        if (Transferencia == 0 || Transferencia == 1) {
+    bool Validacion = false;
+    if (Linea_ == nullptr || Tamaño == 0){
+        Validacion = true;
+        switch (Case){
+        case 0:
+            cout << "Por el momento, la estacion que anadira es la unica en la linea." << endl;
             break;
-        } else {
-            cout << "Opcion invalida. Por favor, ingrese 0 o 1." << endl;
+        case 1:
+            cout << "La estacion sera ubicada en la posicion inicial." << endl;
+        break;
+        case 2:
+            delete[] Linea_;
+            Linea_ = nullptr;
+        break;
         }
     }
-    return static_cast<bool>(Transferencia);
+    return Validacion;
 }
 
-int Linea::Seleccionar_Añadir()
+bool Linea::Validacion_Error3(bool &Transferencia)
 {
+    int Opcion;
+    bool Validacion = false;
+
+    cout << endl << "De acuerdo a lo siguiente:" << endl;
+    cout << "Ingrese 1 para indicar que la estacion es de transferencia." << endl;
+    cout << "Ingrese 0 para indicar que la estacion no es de transferencia." << endl;
+    cout << "Ingrese una opcion: ";
+    cin >> Opcion;
+    if (Opcion != 0 && Opcion != 1) {
+        Error3_RequerimientoTransferenciaInvalido();
+        Validacion = true;
+    }else{
+        Transferencia = static_cast<bool>(Opcion);
+    }
+    cin.clear();
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    return Validacion;
+}
+
+bool Linea::Validacion_SeleccionarAnadir_Error4(int &Posicion)
+{
+    bool Validacion = false;
+    if (Validacion_Linea_Vacia(1)){
+        Posicion = 1;
+    }else{
+        Mostrar_Estaciones();
+        cout << "\nTeniendo en cuenta lo siguiente: \n.Ingrese 1 si desea que la estacion se ubique al inicio de la linea.";
+        cout << "\n.Ingrese cualquier indice mostrado si desea que la nueva estacion se ubique en esa posicion.";
+        cout << "\n.Ingrese el indice mayor + 1 si desea que la nueva estacion se ubique al final de la linea.";
+        cout << "\nSeleeciona la ubicacion de la estacion en la linea: ";
+        cin >> Posicion;
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        if (Posicion < 1 || Posicion > Tamaño+1){
+            Validacion = true;
+        Error4_PosicionInvalida();
+        }
+    }
+    Posicion -=1;
+    return Validacion;
+}
+
+bool Linea::Validacion_SeleccionarEliminar_Error4(int &Posicion)
+{
+    bool Validacion = false;
     Mostrar_Estaciones();
-    int Posicion = 0;
-    if (Linea_ != nullptr){
-        while(true){
-            cout << "\nTeniendo en cuenta lo siguiente: \n.Ingrese 1 si desea que la estacion se ubique al inicio de la linea.";
-            cout << "\n.Ingrese cualquier indice mostrado si desea que la nueva estacion se ubique en esa posicion.";
-            cout << "\n.Ingrese el indice mayor + 1 si desea que la nueva estacion se ubique al final de la linea.";
-            cout << "\nSeleeciona la ubicacion de la estacion en la linea: ";
-            cin >> Posicion;
-            if (Posicion < 1 || Posicion > Tamaño+1){
-                cout <<"Ubicacion no valida, intente de nuevo."<< endl;
-            }else break;
-        }
-        Posicion -=1;
+    cout << "\nSeleccione la ubicacion de la estacion en la linea: ";
+    cin >> Posicion;
+    if (Posicion < 1 || Posicion > Tamaño) {
+        Validacion = true;
+        Error4_PosicionInvalida();
     }
-
-    return Posicion;
+    cin.clear();
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    Posicion -= 1;
+    return Validacion;
 }
 
-int Linea::Seleccionar_Eliminar()
+bool Linea::Validacion_Error2(int &Posicion)
 {
-    Mostrar_Estaciones();
-    int Posicion = 0;
-
-    while (true) {
-        cout << "\nSeleccione la ubicación de la estación en la línea: ";
-        if (!(cin >> Posicion)) {
-            cout << "Entrada inválida. Intente nuevamente." << endl;
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-        } else {  // La entrada es un número válido
-            if (Posicion < 1 || Posicion > Tamaño) {
-                cout << "Ubicación no válida. Intente nuevamente." << endl;
-        } else {
-            break;  // Salir del bucle si la ubicación es válida
-        }
+    bool Validacion = false;
+    if (Linea_[Posicion].Get_Transferencia() == true){
+        Validacion = true;
     }
-}
-
-// Ajustar la posición para que sea un índice válido (0-based)
-Posicion -= 1;
-
-return Posicion;
-}
-
-bool Linea::Verificacion_Estacion_Transferencia(int Posicion)
-{
-
-    bool Transferencia = false;
-    Transferencia =  (Linea_[Posicion].Get_Transferencia() == true);
-    return Transferencia;
+    return Validacion;
 }
 
 void Linea::Mostrar_Estaciones()
 {
     cout <<endl << "Estaciones presentes en la linea: " << endl;
-
-    if (Linea_ == nullptr){
-        cout <<"La linea aun no tiene estaciones, la ingresada se anadira en la posicion inicial." << endl;
-    }else{
-        for (int i = 0; i < Tamaño; i++){
+    for (int i = 0; i < Tamaño; i++){
         cout << i+1 << ". " << Linea_[i].Get_Nombre() << endl;
-        }
     }
 }
 
 Linea::Linea(string Nombre_Linea, int Tamaño_Linea)
 {
     Nombre = Nombre_Linea;
-
     if (Tamaño_Linea > 0) {
         Tamaño = Tamaño_Linea;
         Linea_ = new Estacion[Tamaño];
@@ -135,50 +139,49 @@ Linea::Linea()
 void Linea::Añadir_Estacion()
 {
     string Nombre_Estacion;
-    bool Existe = Existencia_Estacion(Nombre_Estacion);
-    if(!Existe){
-        bool Es_De_Transferencia = Verificacion_Transferencia();
-        int Posicion = Seleccionar_Añadir();
-        Tamaño += 1;
-
-        Estacion *Actualizacion = new Estacion[Tamaño];
-        for (int i = 0; i < Tamaño; i++) {
-            if (i < Posicion) {
-                Actualizacion[i] = Linea_[i];
-            }else if (i == Posicion) {
-                Actualizacion[i] = Estacion(Nombre_Estacion, Es_De_Transferencia);
-            }else {
-                Actualizacion[i] = Linea_[i - 1];
+    if(!Validacion_Error1(Nombre_Estacion)){
+        bool Es_De_Transferencia;
+        if(!Validacion_Error3(Es_De_Transferencia)){
+            int Posicion;
+        if (!Validacion_SeleccionarAnadir_Error4(Posicion)){
+                Tamaño += 1;
+                Estacion *Actualizacion = new Estacion[Tamaño];
+                for (int i = 0; i < Tamaño; i++) {
+                    if (i < Posicion) {
+                        Actualizacion[i] = Linea_[i];
+                    }else if (i == Posicion) {
+                        Actualizacion[i] = Estacion(Nombre_Estacion, Es_De_Transferencia);
+                    }else {
+                        Actualizacion[i] = Linea_[i - 1];
+                    }
+                }
+                delete [] Linea_;
+                Linea_ = Actualizacion;
             }
         }
-        delete [] Linea_;
-        Linea_ = Actualizacion;
-    }
-    else{
-        Error1_EstacionEncontrada();
     }
 }
 
 void Linea::Eliminar_Estacion()
 {
-    int Posicion = Seleccionar_Eliminar();
-    bool Es_De_Transferencia = Verificacion_Estacion_Transferencia(Posicion);
-
-    if (!Es_De_Transferencia){
-        Tamaño -=1;
-        Estacion *Actualizacion = new Estacion[Tamaño];
-
-        for (int i = 0; i < Tamaño; i++){
-            if (i < Posicion){
-                Actualizacion[i] = Linea_[i];
-            }else if(i >= Posicion){
-                Actualizacion[i] = Linea_[i+1];
+    int Posicion;
+    if(!Validacion_SeleccionarEliminar_Error4(Posicion)){
+        if(!Validacion_Error2(Posicion)){
+            Tamaño -=1;
+            if(!Validacion_Linea_Vacia(2)){
+                Estacion *Actualizacion = new Estacion[Tamaño];
+                for (int i = 0; i < Tamaño; i++){
+                    if (i < Posicion){
+                        Actualizacion[i] = Linea_[i];
+                    }else if(i >= Posicion){
+                        Actualizacion[i] = Linea_[i+1];
+                    }
+                }
+                delete [] Linea_;
+                Linea_ = Actualizacion;
             }
         }
-        delete [] Linea_;
-        Linea_ = Actualizacion;
     }
-    else Error2_EstacionDeTransferenciaEncontrada();
 }
 
 int Linea::GetTamaño()
@@ -201,7 +204,7 @@ Linea::~Linea()
     delete[] Linea_;
 }
 
-void Linea::Error1_EstacionEncontrada()
+void Linea::Error1_EstacionRepetida()
 {
     try {
         throw runtime_error("La estacion ingresada ya esta almacenada en la linea.");
@@ -218,3 +221,23 @@ void Linea::Error2_EstacionDeTransferenciaEncontrada()
         cout << "Error: " << ex.what() << endl;
     }
 }
+
+void Linea::Error3_RequerimientoTransferenciaInvalido()
+{
+    try {
+        throw runtime_error("Condicion ingresada invalida.");
+    } catch (const runtime_error& ex) {
+        cout << "Error: " << ex.what() << endl;
+    }
+}
+
+void Linea::Error4_PosicionInvalida()
+{
+    try {
+        throw runtime_error("La posicion ingresada es invalida.");
+    } catch (const runtime_error& ex) {
+        cout << "Error: " << ex.what() << endl;
+    }
+}
+
+

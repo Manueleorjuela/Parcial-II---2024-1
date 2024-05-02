@@ -13,18 +13,22 @@ private:
     Estacion *Linea_;
 
     //Validar
-    bool Existencia_Estacion(string &Nombre_Estacion);
-    bool Verificacion_Transferencia();
-    bool Verificacion_Estacion_Transferencia(int Posicion_Estacion);
+    bool Validacion_Error1(string &Nombre_Estacion);
+    bool Validacion_Error2(int &Posicion_Estacion);
+    bool Validacion_Error3(bool &Transferencia);
+    bool Validacion_SeleccionarAnadir_Error4(int &Posicion);
+    bool Validacion_SeleccionarEliminar_Error4(int &Posicion);
+    bool Validacion_Linea_Vacia(int Case);
 
     //Funciones de manejo
     void Mostrar_Estaciones();
-    int Seleccionar_Añadir();
-        int Seleccionar_Eliminar();
 
     //Errores
-    void Error1_EstacionEncontrada();
+
+    void Error1_EstacionRepetida();
     void Error2_EstacionDeTransferenciaEncontrada();
+    void Error3_RequerimientoTransferenciaInvalido();
+    void Error4_PosicionInvalida();
 
 public:
 

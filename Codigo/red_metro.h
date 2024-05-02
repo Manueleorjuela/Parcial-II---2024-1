@@ -17,7 +17,6 @@ private:
     bool Validacion_Error5(string &Nombre_Linea);
 
 
-
     //Errores
     void Error1_LineaVacia();
     void Error2_EstacionTransferenciaEncontrada();
@@ -29,12 +28,12 @@ public:
 
     Red_Metro();
     void Añadir_Linea();
-        void Eliminar_Linea();
+    void Eliminar_Linea();
     void Mostrar_Lineas();
 
     //Operaciones con estaciones
     void Añadir_Estacion();
-        void Eliminar_Estacion();
+    void Eliminar_Estacion();
 
 
     int Get_Tamaño();

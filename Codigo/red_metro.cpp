@@ -40,7 +40,6 @@ bool Red_Metro::Validacion_Error2(int Posicion_Linea)
             break;
         };
     }
-
     return Existe;
 }
 
@@ -55,6 +54,9 @@ bool Red_Metro::Validacion_Error3(int Case)
             case 1:
             Error3_RedVacia();
             break;
+            case 2:
+            delete[] Metro;
+            Metro = nullptr;
         }
         Validacion = true;
     }
@@ -96,15 +98,18 @@ void Red_Metro::Eliminar_Estacion()
 
 bool Red_Metro::Validacion_Errror4(int &Posicion)
 {
+    bool Validacion = false;
     Mostrar_Lineas();
     cout << endl<<"Seleccione la posicion en la cual quiere realizar los cambios: ";
     cin >> Posicion;
     if (Posicion < 1 || Posicion > Tamaño){
         Error4_PosicionInvalida();
+        Validacion = true;
     }
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
     Posicion -=1;
-    return Posicion;
+    cin.clear();
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    return Validacion;
 }
 
 Red_Metro::Red_Metro()
@@ -137,16 +142,18 @@ void Red_Metro::Eliminar_Linea()
         if(!Validacion_Errror4(Posicion)){
             if (!Validacion_Error2(Posicion)){
                 Tamaño -=1;
-                Actualizacion = new Linea[Tamaño];
-                for (int j = 0; j < Tamaño; j++){
-                    if (j < Posicion){
-                        Actualizacion[j] = Metro[j];
-                    }else if (j >= Posicion){
-                        Actualizacion[j] = Metro[j+1];
+                if(!Validacion_Error3(2)){
+                    Actualizacion = new Linea[Tamaño];
+                    for (int j = 0; j < Tamaño; j++){
+                        if (j < Posicion){
+                            Actualizacion[j] = Metro[j];
+                        }else if (j >= Posicion){
+                            Actualizacion[j] = Metro[j+1];
+                        }
                     }
+                    delete [] Metro;
+                    Metro = Actualizacion;
                 }
-                delete [] Metro;
-                Metro = Actualizacion;
             }
         }
     }
