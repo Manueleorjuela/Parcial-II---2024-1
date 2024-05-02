@@ -4,7 +4,6 @@ bool Linea::Existencia_Estacion(string &Nombre_Estacion)
 {
     bool Existe = false;
     cout << endl << "Ingrese el nombre de la nueva estacion: ";
-    cin.ignore();
     getline(cin, Nombre_Estacion);
     Nombre_Estacion += " " + Nombre;
 
@@ -62,6 +61,7 @@ int Linea::Seleccionar_Añadir()
         }
         Posicion -=1;
     }
+
     return Posicion;
 }
 
@@ -69,15 +69,26 @@ int Linea::Seleccionar_Eliminar()
 {
     Mostrar_Estaciones();
     int Posicion = 0;
-    while(true){
-        cout << "\nSeleeciona la ubicacion de la estacion en la linea: ";
-        cin >> Posicion;
-        if (Posicion < 1 || Posicion > Tamaño){
-            cout <<"Ubicacion no valida, intente de nuevo."<< endl;
-        }else break;
+
+    while (true) {
+        cout << "\nSeleccione la ubicación de la estación en la línea: ";
+        if (!(cin >> Posicion)) {
+            cout << "Entrada inválida. Intente nuevamente." << endl;
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        } else {  // La entrada es un número válido
+            if (Posicion < 1 || Posicion > Tamaño) {
+                cout << "Ubicación no válida. Intente nuevamente." << endl;
+        } else {
+            break;  // Salir del bucle si la ubicación es válida
+        }
     }
-    Posicion -=1;
-    return Posicion;
+}
+
+// Ajustar la posición para que sea un índice válido (0-based)
+Posicion -= 1;
+
+return Posicion;
 }
 
 bool Linea::Verificacion_Estacion_Transferencia(int Posicion)

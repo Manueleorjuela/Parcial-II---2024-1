@@ -45,7 +45,3 @@ void Estacion::Set_Tiempo_Posterior(int Nuevo_Tiempo)
     Tiempo_Posterior = Nuevo_Tiempo;
 }
 
-
-
-
-

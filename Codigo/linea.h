@@ -9,7 +9,7 @@ private:
 
     string Nombre;
     int Tamaño;
-    string *Lineas_Conectadas;
+        string *Lineas_Conectadas;
     Estacion *Linea_;
 
     //Validar
@@ -20,7 +20,7 @@ private:
     //Funciones de manejo
     void Mostrar_Estaciones();
     int Seleccionar_Añadir();
-    int Seleccionar_Eliminar();
+        int Seleccionar_Eliminar();
 
     //Errores
     void Error1_EstacionEncontrada();
@@ -30,14 +30,14 @@ public:
 
     Linea();
     Linea(string Nombre_Linea, int Tamaño_Linea);
-    ~Linea();
+        ~Linea();
 
     //Operaciones con estaciones
     void Añadir_Estacion();
-    void Eliminar_Estacion();
+        void Eliminar_Estacion();
 
     int GetTamaño();
-    string Get_Nombre();
+        string Get_Nombre();
     Estacion *Get_Linea();
 
 
