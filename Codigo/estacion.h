@@ -8,8 +8,10 @@ using namespace std;
 class Estacion
 {
 private:
+
     string Nombre;
     bool Transferencia;
+    string *Conexiones;
 
     int Tiempo_Anterior;
     int Tiempo_Posterior;
@@ -29,6 +31,8 @@ public:
 
     void Set_Tiempo_Anterior(int Nuevo_Tiempo);
     void Set_Tiempo_Posterior(int Nuevo_Tiempo);
+
+    void Set_Nueva_Conexion(string *Nuevas_Conexiones);
 
 };
 

@@ -1,10 +1,11 @@
 #include "linea.h"
 
-bool Linea::Validacion_Error1(string &Nombre_Estacion)
+bool Linea::Validacion_Error1(string &Nombre_Estacion_Conexion, string &Nombre_Estacion)
 {
     bool Existe = false;
     cout << endl << "Ingrese el nombre de la nueva estacion: ";
     getline(cin, Nombre_Estacion);
+    Nombre_Estacion_Conexion = Nombre_Estacion;
     Nombre_Estacion += " " + Nombre;
 
     if(!Validacion_Linea_Vacia(0)) {
@@ -104,6 +105,7 @@ bool Linea::Validacion_Error2(int &Posicion)
 {
     bool Validacion = false;
     if (Linea_[Posicion].Get_Transferencia() == true){
+        Error2_EstacionDeTransferenciaEncontrada();
         Validacion = true;
     }
     return Validacion;
@@ -136,20 +138,18 @@ Linea::Linea()
     Linea_ = nullptr;
 }
 
-void Linea::Añadir_Estacion()
+void Linea::Añadir_Estacion(string &Nombre_Estacion_Conexion, bool &Es_De_Transferencia, int& Posicion_Estacion)
 {
     string Nombre_Estacion;
-    if(!Validacion_Error1(Nombre_Estacion)){
-        bool Es_De_Transferencia;
+    if(!Validacion_Error1(Nombre_Estacion_Conexion, Nombre_Estacion)){
         if(!Validacion_Error3(Es_De_Transferencia)){
-            int Posicion;
-        if (!Validacion_SeleccionarAnadir_Error4(Posicion)){
+        if (!Validacion_SeleccionarAnadir_Error4(Posicion_Estacion)){
                 Tamaño += 1;
                 Estacion *Actualizacion = new Estacion[Tamaño];
                 for (int i = 0; i < Tamaño; i++) {
-                    if (i < Posicion) {
+                    if (i < Posicion_Estacion) {
                         Actualizacion[i] = Linea_[i];
-                    }else if (i == Posicion) {
+                    }else if (i == Posicion_Estacion) {
                         Actualizacion[i] = Estacion(Nombre_Estacion, Es_De_Transferencia);
                     }else {
                         Actualizacion[i] = Linea_[i - 1];
@@ -160,6 +160,25 @@ void Linea::Añadir_Estacion()
             }
         }
     }
+}
+
+void Linea::Añadir_Estacion(bool &Transferencia, string &Nombre_Estacion_Conexion)
+{
+    int Posicion_Estacion = Tamaño;
+    Nombre_Estacion_Conexion += " " + Nombre;
+    Tamaño += 1;
+    Estacion *Actualizacion = new Estacion[Tamaño];
+    for (int i = 0; i < Tamaño; i++) {
+        if (i < Posicion_Estacion) {
+        Actualizacion[i] = Linea_[i];
+        }else if (i == Posicion_Estacion) {
+        Actualizacion[i] = Estacion(Nombre_Estacion_Conexion, Transferencia);
+        }else {
+        Actualizacion[i] = Linea_[i - 1];
+        }
+    }
+    delete [] Linea_;
+    Linea_ = Actualizacion;
 }
 
 void Linea::Eliminar_Estacion()
@@ -181,6 +200,23 @@ void Linea::Eliminar_Estacion()
                 Linea_ = Actualizacion;
             }
         }
+    }
+}
+
+void Linea::Eliminar_Estacion(int &Posicion_Estacion)
+{
+    Tamaño -=1;
+    if(!Validacion_Linea_Vacia(2)){
+        Estacion *Actualizacion = new Estacion[Tamaño];
+        for (int i = 0; i < Tamaño; i++){
+            if (i < Posicion_Estacion){
+            Actualizacion[i] = Linea_[i];
+            }else if(i >= Posicion_Estacion){
+            Actualizacion[i] = Linea_[i+1];
+            }
+        }
+        delete [] Linea_;
+        Linea_ = Actualizacion;
     }
 }
 
