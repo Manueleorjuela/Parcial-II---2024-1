@@ -10,13 +10,15 @@ private:
     string Nombre;
     int Tamaño;
     Estacion *Linea_;
+    bool Linea_Conectada;
 
     //Validar
     bool Validacion_Error1(string &Nombre_Estacion_Conexion, string &Nombre_Estacion);
     bool Validacion_Error2(int &Posicion_Estacion);
     bool Validacion_Error3(bool &Transferencia);
-    bool Validacion_SeleccionarAnadir_Error4(int &Posicion);
-    bool Validacion_SeleccionarEliminar_Error4(int &Posicion);
+    bool Validacion_Error4_Añadir(int &Posicion);
+    bool Validacion_Error4_Eliminar(int &Posicion);
+
     bool Validacion_Linea_Vacia(int Case);
 
     //Funciones de manejo
@@ -37,7 +39,7 @@ public:
 
     //Operaciones con estaciones
     void Añadir_Estacion(string &Nombre_Estacion_Conexion, bool &Transferencia, int& Posicion_Estacion);
-    void Añadir_Estacion(bool &Transferencia, string &Nombre_Estacion_Conexion);
+    void Añadir_Estacion(bool Transferencia, string &Nombre_Estacion_Conexion);
 
     void Eliminar_Estacion();
     void Eliminar_Estacion(int &Posicion_Estacion);
@@ -45,10 +47,12 @@ public:
     int GetTamaño();
     string Get_Nombre();
     Estacion *Get_Linea();
+    bool Get_LineaConectada();
 
 
+    void Set_LineaConectada(bool Cambio);
 
-    //Errores
+
 };
 
 #endif // LINEA_H

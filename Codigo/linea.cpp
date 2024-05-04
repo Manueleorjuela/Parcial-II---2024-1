@@ -5,6 +5,7 @@ bool Linea::Validacion_Error1(string &Nombre_Estacion_Conexion, string &Nombre_E
     bool Existe = false;
     cout << endl << "Ingrese el nombre de la nueva estacion: ";
     getline(cin, Nombre_Estacion);
+
     Nombre_Estacion_Conexion = Nombre_Estacion;
     Nombre_Estacion += " " + Nombre;
 
@@ -62,7 +63,7 @@ bool Linea::Validacion_Error3(bool &Transferencia)
     return Validacion;
 }
 
-bool Linea::Validacion_SeleccionarAnadir_Error4(int &Posicion)
+bool Linea::Validacion_Error4_Añadir(int &Posicion)
 {
     bool Validacion = false;
     if (Validacion_Linea_Vacia(1)){
@@ -85,7 +86,7 @@ bool Linea::Validacion_SeleccionarAnadir_Error4(int &Posicion)
     return Validacion;
 }
 
-bool Linea::Validacion_SeleccionarEliminar_Error4(int &Posicion)
+bool Linea::Validacion_Error4_Eliminar(int &Posicion)
 {
     bool Validacion = false;
     Mostrar_Estaciones();
@@ -129,6 +130,8 @@ Linea::Linea(string Nombre_Linea, int Tamaño_Linea)
         Linea_ = nullptr;
     }
     Tamaño =  Tamaño_Linea;
+    Linea_Conectada = false;
+
 }
 
 Linea::Linea()
@@ -143,7 +146,7 @@ void Linea::Añadir_Estacion(string &Nombre_Estacion_Conexion, bool &Es_De_Trans
     string Nombre_Estacion;
     if(!Validacion_Error1(Nombre_Estacion_Conexion, Nombre_Estacion)){
         if(!Validacion_Error3(Es_De_Transferencia)){
-        if (!Validacion_SeleccionarAnadir_Error4(Posicion_Estacion)){
+        if (!Validacion_Error4_Añadir(Posicion_Estacion)){
                 Tamaño += 1;
                 Estacion *Actualizacion = new Estacion[Tamaño];
                 for (int i = 0; i < Tamaño; i++) {
@@ -162,7 +165,7 @@ void Linea::Añadir_Estacion(string &Nombre_Estacion_Conexion, bool &Es_De_Trans
     }
 }
 
-void Linea::Añadir_Estacion(bool &Transferencia, string &Nombre_Estacion_Conexion)
+void Linea::Añadir_Estacion(bool Transferencia, string &Nombre_Estacion_Conexion)
 {
     int Posicion_Estacion = Tamaño;
     Nombre_Estacion_Conexion += " " + Nombre;
@@ -184,7 +187,7 @@ void Linea::Añadir_Estacion(bool &Transferencia, string &Nombre_Estacion_Conexi
 void Linea::Eliminar_Estacion()
 {
     int Posicion;
-    if(!Validacion_SeleccionarEliminar_Error4(Posicion)){
+    if(!Validacion_Error4_Eliminar(Posicion)){
         if(!Validacion_Error2(Posicion)){
             Tamaño -=1;
             if(!Validacion_Linea_Vacia(2)){
@@ -233,6 +236,16 @@ string Linea::Get_Nombre()
 Estacion *Linea::Get_Linea()
 {
     return Linea_;
+}
+
+bool Linea::Get_LineaConectada()
+{
+    return Linea_Conectada;
+}
+
+void Linea::Set_LineaConectada(bool Cambio)
+{
+    Linea_Conectada = Cambio;
 }
 
 Linea::~Linea()

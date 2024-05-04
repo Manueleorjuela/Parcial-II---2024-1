@@ -48,34 +48,6 @@ bool Red_Metro::Validacion_Error7(string &Nombre_LineaConectar, int& Posicion_Es
     return Validacion;
 }
 
-bool Red_Metro::Validacion_Linea_Conectar_Ya_Conectada(string &Nombre_Linea_Actual, string &Nombre_LineaConectar, int Case, Linea &Linea, int& Posicion_Estacion)
-{
-    bool Validacion = false;
-    cout << Nombre_LineaConectar << endl;
-    if (Lineas_Conectadas == nullptr){
-        Validacion = false;
-    }else{
-        switch (Case){
-        case 1:
-            for (int i = 0; i < Cantidad_Conexiones; i++){
-                if (Nombre_LineaConectar == Lineas_Conectadas[i]){
-                    Validacion = true;
-                }
-            }
-        break;
-        case 2:
-        for (int i = 0; i < Cantidad_Conexiones; i++){
-                if (Nombre_LineaConectar == Lineas_Conectadas[i] && Nombre_Linea_Actual != Nombre_LineaConectar){
-                    Error7_LineaIngresadaNoHaceParteDeLaRed();
-                    Linea.Eliminar_Estacion(Posicion_Estacion);
-                    Validacion = true;
-                }
-            }
-        break;
-        }
-    }
-    return Validacion;
-}
 
 bool Red_Metro::Validacion_Error1(Linea &Evaluar)
 {
@@ -134,67 +106,64 @@ void Red_Metro::Mostrar_Lineas()
     }
 }
 
+void Red_Metro::Validacion_Estacion_Transferencia(Linea &Actual, Linea &Conectar, string &Nombre_Estacion_Conexion, int& Pos_Estacion)
+{
+    if (Primer_Conexion == false){
+        Realizar_Conexion(Actual, Conectar, Nombre_Estacion_Conexion);
+        Primer_Conexion = true;
+    }
+    else{
+        if (Conectar.Get_LineaConectada() == Actual.Get_LineaConectada()){
+            Error8_LineaInvalida();
+            Actual.Eliminar_Estacion(Pos_Estacion);
+        }else{
+            Realizar_Conexion(Actual, Conectar, Nombre_Estacion_Conexion);
+        }
+    }
+}
+
+void Red_Metro::Realizar_Conexion(Linea &Actual, Linea &Conectar, string &Nombre_EstacionConexion)
+{
+    Conectar.Añadir_Estacion(true, Nombre_EstacionConexion);
+    Conectar.Set_LineaConectada(true);
+    Actual.Set_LineaConectada(true);
+}
+
 void Red_Metro::Añadir_Estacion()
 {
 
-    int Posicion_Estacion;
-    int Posicion_Linea_Transferencia;
-    bool Transferencia;
+    int Posicion_Estacion_Actual;
+    bool Transferencia = false;
+
     string Nombre_LineaActual;
-    string Nombre_LineaConectar;
     string Nombre_Estacion_Conexion;
 
     if (!Validacion_Error3(1)){
         int Posicion;
         if(!Validacion_Error4(Posicion)){
-            Metro[Posicion].Añadir_Estacion(Nombre_Estacion_Conexion, Transferencia, Posicion_Estacion);
+            Metro[Posicion].Añadir_Estacion(Nombre_Estacion_Conexion, Transferencia, Posicion_Estacion_Actual);
             Nombre_LineaActual = Metro[Posicion].Get_Nombre();
+
             if(Transferencia){
-                if(!Validacion_Error6(Posicion_Estacion, Metro[Posicion])){
-                    Mostrar_Lineas_Para_Conectar(Nombre_LineaActual);
-                    if(Validacion_Error7(Nombre_LineaConectar, Posicion_Estacion, Metro[Posicion], Nombre_LineaActual)){
-
-                        if(Validacion_Linea_Conectar_Ya_Conectada(Nombre_LineaConectar, Nombre_LineaActual,1, Metro[Posicion_Estacion], Posicion_Estacion)){
-
-                            if(!Validacion_Linea_Conectar_Ya_Conectada(Nombre_LineaActual, Nombre_LineaConectar, 2, Metro[Posicion_Estacion], Posicion_Estacion)){
-                                Posicion_Linea_Transferencia = Buscar_Posicion_Linea(Nombre_LineaConectar);
-                                Metro[Posicion_Linea_Transferencia].Añadir_Estacion(Transferencia, Nombre_Estacion_Conexion);
-                            }
-                        }else{
-                            cout << "No esta" << endl;
-                            Posicion_Linea_Transferencia = Buscar_Posicion_Linea(Nombre_LineaConectar);
-                            Metro[Posicion_Linea_Transferencia].Añadir_Estacion(Transferencia, Nombre_Estacion_Conexion);
-                        }
-
-                        if (Lineas_Conectadas == nullptr){
-                            Cantidad_Conexiones +=2;
-                            string *Actualizacion = new string[Cantidad_Conexiones];
-                            Actualizacion[0] = Nombre_LineaActual;
-                            Actualizacion[1] = Nombre_LineaConectar;
-                            delete[] Lineas_Conectadas;
-                            Lineas_Conectadas = Actualizacion;
-                            cout << Lineas_Conectadas[0] << endl;
-                            cout << Lineas_Conectadas[1] << endl;
-
-                        }else{
-                            cout << Cantidad_Conexiones << endl;
-                            Cantidad_Conexiones +=1;
-                            string *Actualizacion = new string[Cantidad_Conexiones];
-                            for (int i = 0; i < Cantidad_Conexiones-1; i++){
-                                Actualizacion[i] = Lineas_Conectadas[i];
-                                cout << Actualizacion[i] << endl;
-
-                            }
-                            Actualizacion[Cantidad_Conexiones-1] = Nombre_LineaActual;
-                            cout << Actualizacion[Cantidad_Conexiones-1] << endl;
-                            delete[] Lineas_Conectadas;
-                            Lineas_Conectadas = Actualizacion;
-                        }
-                    }
-                }
+                Estacion_Transferencia_Establecida(Metro[Posicion], Posicion_Estacion_Actual, Nombre_LineaActual, Nombre_Estacion_Conexion);
             }
         }
     }
+}
+
+void Red_Metro::Estacion_Transferencia_Establecida(Linea &Actual, int& Posicion_Estacion_Actual, string& Nombre_LineaActual, string &Nombre_Estacion_Transferencia)
+{
+    int Posicion_Linea_Transferencia;
+    string Nombre_Linea_Conectar;
+
+    if (!Validacion_Error6(Posicion_Estacion_Actual, Actual)){
+        Mostrar_Lineas_Para_Conectar(Nombre_LineaActual);
+        if (Validacion_Error7(Nombre_Linea_Conectar, Posicion_Estacion_Actual, Actual, Nombre_LineaActual)){
+            Posicion_Linea_Transferencia = Buscar_Posicion_Linea(Nombre_Linea_Conectar);
+            Validacion_Estacion_Transferencia(Actual, Metro[Posicion_Linea_Transferencia], Nombre_Estacion_Transferencia, Posicion_Estacion_Actual);
+        }
+    }
+
 }
 
 int Red_Metro::Buscar_Posicion_Linea(string &Nombre_Linea)
@@ -222,8 +191,7 @@ void Red_Metro::Mostrar_Lineas_Para_Conectar(string &Nombre_Linea_Actual)
 }
 
 void Red_Metro::Eliminar_Estacion()
-{;
-
+{
     if (!Validacion_Error3(1)){
         int Posicion ;
         if (!Validacion_Error4(Posicion)){
@@ -254,20 +222,18 @@ Red_Metro::Red_Metro()
 {
     Tamaño = 0;
     Metro = nullptr;
-    Lineas_Conectadas = nullptr;
-    Cantidad_Conexiones = 0;
+    Primer_Conexion = false;
 }
 
 void Red_Metro::Añadir_Linea()
 {
     string Nombre_Linea;
+    Linea *Actualizacion;
 
     if(!Validacion_Error5(Nombre_Linea)){
         Tamaño += 1;
-        Linea *Actualizacion = new Linea[Tamaño];
-        for (int i = 0; i < Tamaño - 1; i++) {
-        Actualizacion[i] = Metro[i];
-        }
+        Actualizacion = new Linea[Tamaño];
+        copy(Metro, Metro + Tamaño - 1, Actualizacion);
         delete[] Metro;
         Actualizacion[Tamaño - 1] = Linea(Nombre_Linea, 0);
         Metro = Actualizacion;
@@ -366,5 +332,15 @@ void Red_Metro::Error7_LineaIngresadaNoHaceParteDeLaRed()
         cout << "Error: " << ex.what() << endl;
     }
 }
+
+void Red_Metro::Error8_LineaInvalida()
+{
+    try {
+        throw runtime_error("La linea ingresada para crear la transferencia no es valida, ya que se encuentra conectada o es una linea aislada de la red central.");
+    } catch (const runtime_error& ex) {
+        cout << "Error: " << ex.what() << endl;
+    }
+}
+
 
 

@@ -8,8 +8,7 @@ private:
 
     Linea *Metro;
     int Tamaño;
-    string *Lineas_Conectadas;
-    int Cantidad_Conexiones;
+        bool Primer_Conexion;
 
     //Validaciones
     bool Validacion_Error1(Linea &Evaluar);
@@ -19,7 +18,7 @@ private:
     bool Validacion_Error5(string &Nombre_Linea);
     bool Validacion_Error6(int &Posicion_Estacion, Linea &Linea);
     bool Validacion_Error7(string &Nombre_LineaConectar, int& Posicion_Estacion, Linea &Linea, string &Nombre_LineaActual);
-    bool Validacion_Linea_Conectar_Ya_Conectada(string &Nombre_Linea_Actual, string &Nombre_Linea_Conectar, int Case, Linea &Linea, int& Posicion_Estacion);
+
 
     //Errores
     void Error1_LineaVacia();
@@ -29,15 +28,23 @@ private:
     void Error5_NombreLineaRepetido();
     void Error6_CrearEstacionTransConUnaSolaLinea();
     void Error7_LineaIngresadaNoHaceParteDeLaRed();
+    void Error8_LineaInvalida();
 
     //Funciones de Manejo
+    void Mostrar_Lineas();
+
+    //Para añadirEstacionesTransferencia
     int Buscar_Posicion_Linea(string &Nombre_Linea);
     void Mostrar_Lineas_Para_Conectar(string &Nombre_Linea_Actual);
-    void Mostrar_Lineas();
+    void Estacion_Transferencia_Establecida(Linea &Actual, int& PosicionEstacionActual, string& Nombre_LineaActual, string &Nombre_LineaTransferencia);
+    void Validacion_Estacion_Transferencia(Linea &Actual, Linea &Conectar, string &Nombre_EstacionConexion, int &Pos_Estacion);
+    void Realizar_Conexion(Linea &Actual, Linea &Conectar, string &Nombre_EstacionConexion);
 
 public:
 
     Red_Metro();
+
+    //Operacion con Lineas
     void Añadir_Linea();
     void Eliminar_Linea();
 
