@@ -18,6 +18,7 @@ private:
     bool Validacion_Error5(string &Nombre_Linea);
     bool Validacion_Error6(int &Posicion_Estacion, Linea &Linea);
     bool Validacion_Error7(string &Nombre_LineaConectar, int& Posicion_Estacion, Linea &Linea, string &Nombre_LineaActual);
+    void Validacion_Error9(Linea &Linea, bool& Transferencia, int &Posicion_Estacion, bool& Termina_Proceso);
 
 
     //Errores
@@ -29,16 +30,22 @@ private:
     void Error6_CrearEstacionTransConUnaSolaLinea();
     void Error7_LineaIngresadaNoHaceParteDeLaRed();
     void Error8_LineaInvalida();
+    void Error9_AñadirEstacion_En_LineaAislada();
+    void Error10_LinaaSinEstacionesDeTransferencia();
 
     //Funciones de Manejo
     void Mostrar_Lineas();
+    void Mostrar_Lineas_Para_Conectar(string &Nombre_Linea_Actual);
+    void Mostrar_Estaciones_Transferencia(Linea &Conexion);
 
     //Para añadirEstacionesTransferencia
     int Buscar_Posicion_Linea(string &Nombre_Linea);
-    void Mostrar_Lineas_Para_Conectar(string &Nombre_Linea_Actual);
-    void Estacion_Transferencia_Establecida(Linea &Actual, int& PosicionEstacionActual, string& Nombre_LineaActual, string &Nombre_LineaTransferencia);
-    void Validacion_Estacion_Transferencia(Linea &Actual, Linea &Conectar, string &Nombre_EstacionConexion, int &Pos_Estacion);
-    void Realizar_Conexion(Linea &Actual, Linea &Conectar, string &Nombre_EstacionConexion);
+    void ModificarNombreEstacion(string &Nombre_Estacion);
+    void Estacion_Transferencia_Establecida(Linea &Actual, int& PosicionEstacionActual, string& Nombre_LineaActual);
+    void Validacion_Estacion_Transferencia(Linea &Actual, Linea &Conectar, int &Pos_Estacion);
+    void Realizar_Conexion(Linea &Actual, Linea &Conectar, int &Pos_Estacion_Actual);
+    void Conectar_EstacionNueva(Estacion* Estaciones, int &Posicion_Actual, Linea &Conectar,  Linea &Actual);
+    void Conectar_EstacionExistente(Estacion* Estaciones, int &Posicion_Actual, Linea &Conectar, Linea &Actual);
 
 public:
 

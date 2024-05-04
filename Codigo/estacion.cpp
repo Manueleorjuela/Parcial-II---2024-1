@@ -5,7 +5,6 @@ Estacion::Estacion(string Nombre_Estacion, bool Es_No_De_Transferencia)
 {
     Nombre = Nombre_Estacion;
     Transferencia = Es_No_De_Transferencia;
-    Conexiones = nullptr;
 }
 
 Estacion::Estacion()
@@ -14,7 +13,6 @@ Estacion::Estacion()
     Transferencia = false;
     Tiempo_Anterior = 0;
     Tiempo_Posterior = 0;
-    Conexiones = nullptr;
 }
 
 string Estacion::Get_Nombre()
@@ -47,8 +45,13 @@ void Estacion::Set_Tiempo_Posterior(int Nuevo_Tiempo)
     Tiempo_Posterior = Nuevo_Tiempo;
 }
 
-void Estacion::Set_Nueva_Conexion(string *Nuevas_Conexiones)
+void Estacion::Set_Transfrencia(bool Cambio)
 {
-    Conexiones = Nuevas_Conexiones;
+    Transferencia = Cambio;
+}
+
+void Estacion::Set_Nombre(string Nuevo_Nombre)
+{
+    Nombre = Nuevo_Nombre;
 }
 

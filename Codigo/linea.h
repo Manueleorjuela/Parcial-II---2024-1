@@ -13,7 +13,7 @@ private:
     bool Linea_Conectada;
 
     //Validar
-    bool Validacion_Error1(string &Nombre_Estacion_Conexion, string &Nombre_Estacion);
+    bool Validacion_Error1(string &Nombre_Estacion);
     bool Validacion_Error2(int &Posicion_Estacion);
     bool Validacion_Error3(bool &Transferencia);
     bool Validacion_Error4_Añadir(int &Posicion);
@@ -38,11 +38,13 @@ public:
         ~Linea();
 
     //Operaciones con estaciones
-    void Añadir_Estacion(string &Nombre_Estacion_Conexion, bool &Transferencia, int& Posicion_Estacion);
+    void Añadir_Estacion(bool &Termina_Proceso, bool &Transferencia, int& Posicion_Estacion);
     void Añadir_Estacion(bool Transferencia, string &Nombre_Estacion_Conexion);
 
     void Eliminar_Estacion();
     void Eliminar_Estacion(int &Posicion_Estacion);
+
+    int Cantidad_Estaciones_Transferencia();
 
     int GetTamaño();
     string Get_Nombre();
@@ -51,7 +53,7 @@ public:
 
 
     void Set_LineaConectada(bool Cambio);
-
+    void Set_Transferencia(bool Cambio);
 
 };
 

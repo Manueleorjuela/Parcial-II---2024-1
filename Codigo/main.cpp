@@ -6,10 +6,12 @@ int main()
     Metro.Añadir_Linea();;
     Metro.Añadir_Linea();
     Metro.Añadir_Linea();
-        Metro.Añadir_Linea();
+    Metro.Añadir_Linea();
 
     Metro.Añadir_Estacion();
     Metro.Añadir_Estacion();
+    /*Metro.Añadir_Estacion();
+    Metro.Añadir_Estacion();*/
 
     Metro.Eliminar_Estacion();
     Metro.Eliminar_Estacion();

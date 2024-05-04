@@ -11,12 +11,9 @@ private:
 
     string Nombre;
     bool Transferencia;
-    string *Conexiones;
 
     int Tiempo_Anterior;
     int Tiempo_Posterior;
-
-
 
 public:
 
@@ -31,8 +28,10 @@ public:
 
     void Set_Tiempo_Anterior(int Nuevo_Tiempo);
     void Set_Tiempo_Posterior(int Nuevo_Tiempo);
+    void Set_Transfrencia(bool Cambio);
+    void Set_Nombre(string Nuevo_Nombre);
 
-    void Set_Nueva_Conexion(string *Nuevas_Conexiones);
+
 
 };
 
