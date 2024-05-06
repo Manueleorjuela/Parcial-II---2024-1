@@ -1,7 +1,6 @@
 #ifndef LINEA_H
 #define LINEA_H
 #include "estacion.h"
-#include <limits>
 
 class Linea
 {
@@ -18,11 +17,14 @@ private:
     bool Validacion_Error3(bool &Transferencia);
     bool Validacion_Error4_Añadir(int &Posicion);
     bool Validacion_Error4_Eliminar(int &Posicion);
-
     bool Validacion_Linea_Vacia(int Case);
+    bool Validacion_Posiciones_Extremas(int &Posicion);
+    void Validacion_Solo_Dos_Estaciones();
 
     //Funciones de manejo
     void Mostrar_Estaciones();
+    void Modificar_TiempoEstaciones(int &Posicion_Cambio);
+    void Modificar_TiempoEstacionesEliminar(int &Posicion_Cambio);
 
     //Errores
 
@@ -45,6 +47,7 @@ public:
     void Eliminar_Estacion(int &Posicion_Estacion);
 
     int Cantidad_Estaciones_Transferencia();
+    void Mostrar_Estaciones_Linea();
 
     int GetTamaño();
     string Get_Nombre();

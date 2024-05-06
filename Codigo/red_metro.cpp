@@ -2,9 +2,11 @@
 
 bool Red_Metro::Validacion_Error5(string &Nombre_Linea)
 {
+
     bool Validacion = false;
     cout << endl << "Ingrese el nombre de la nueva linea: ";
     getline(cin, Nombre_Linea);
+
     if (!Validacion_Error3(0)){
         for (int i = 0; i < Tamaño; i++) {
             if (Metro[i].Get_Nombre() == Nombre_Linea){
@@ -148,10 +150,10 @@ void Red_Metro::Realizar_Conexion(Linea &Actual, Linea &Conectar, int &Pos_Estac
             Conectar_EstacionNueva(Actual_, Pos_Estacion_Actual, Conectar, Actual);
             break;
         case 2:
-            if(Conectar.Cantidad_Estaciones_Transferencia() > 1 && Conectar.GetTamaño() != 0){
+            if(Conectar.Cantidad_Estaciones_Transferencia() > 0 && Conectar.GetTamaño() != 0){
                 Conectar_EstacionExistente(Actual_, Pos_Estacion_Actual, Conectar, Actual);
             }else{
-                Error10_LinaaSinEstacionesDeTransferencia();
+                Error10_LineaSinEstacionesDeTransferencia();
                 cout << "Se agregara como una conexion nueva" << endl;
                 Conectar_EstacionNueva(Actual_, Pos_Estacion_Actual, Conectar, Actual);
             }
@@ -175,7 +177,7 @@ void Red_Metro::Conectar_EstacionExistente(Estacion *Estaciones, int &Pos_Estaci
 {
     string Estacion_Transferencia_Elegida;
     cout << "\nTENGA EN CUENTA QUE: La nueva estacion tendra el nombre de la estacion creada tendra el nombre de la estacion de transferencia conectada.";
-    Mostrar_Estaciones_Transferencia(Conectar);
+    Conectar.Mostrar_Estaciones_Linea();
     ModificarNombreEstacion(Estacion_Transferencia_Elegida);
     Estaciones[Pos_Estacion_Actual].Set_Nombre(Estacion_Transferencia_Elegida +" "+ Actual.Get_Nombre());
     Actual.Set_LineaConectada(true);
@@ -251,17 +253,6 @@ void Red_Metro::Mostrar_Lineas_Para_Conectar(string &Nombre_Linea_Actual)
     }
 }
 
-void Red_Metro::Mostrar_Estaciones_Transferencia(Linea &Conexion)
-{
-    int Cont = 1;
-    cout << endl << endl << "Estaciones disponibles para una transferencia: " << endl;
-    Estacion *Estaciones = Conexion.Get_Linea();
-    for (int i = 0; i < Conexion.GetTamaño(); i++){
-        if (Estaciones[i].Get_Transferencia() == 1){
-            cout << Cont<<". "<< Estaciones[i].Get_Nombre() << endl;
-        }
-    }
-}
 
 void Red_Metro::Eliminar_Estacion()
 {
@@ -391,7 +382,7 @@ void Red_Metro::Error5_NombreLineaRepetido()
 void Red_Metro::Error6_CrearEstacionTransConUnaSolaLinea()
 {
     try {
-        throw runtime_error("No puede crearse una estacion de transferencia si hay una sola linea.");
+        throw runtime_error("\nNo puede crearse una estacion de transferencia si hay una sola linea.");
     } catch (const runtime_error& ex) {
         cout << "Error: " << ex.what() << endl;
     }
@@ -424,7 +415,7 @@ void Red_Metro::Error9_AñadirEstacion_En_LineaAislada()
     }
 }
 
-void Red_Metro::Error10_LinaaSinEstacionesDeTransferencia()
+void Red_Metro::Error10_LineaSinEstacionesDeTransferencia()
 {
     try {
         throw runtime_error("La linea ingresada no contiene ninguna estacion de transferencia o esta vacia.");

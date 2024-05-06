@@ -8,6 +8,7 @@ bool Linea::Validacion_Error1(string &Nombre_Estacion)
     getline(cin, Nombre_Estacion);
 
     if(!Validacion_Linea_Vacia(0)) {
+
         for (int i = 0; i < Tamaño; i++) {
             Nombre = Linea_[i].Get_Nombre();
             if (Linea_[i].Get_Transferencia() == true){
@@ -33,7 +34,6 @@ bool Linea::Validacion_Linea_Vacia(int Case)
             cout << "Por el momento, la estacion que anadira es la unica en la linea." << endl;
             break;
         case 1:
-            cout << "La estacion sera ubicada en la posicion inicial." << endl;
         break;
         case 2:
             delete[] Linea_;
@@ -42,6 +42,38 @@ bool Linea::Validacion_Linea_Vacia(int Case)
         }
     }
     return Validacion;
+}
+
+bool Linea::Validacion_Posiciones_Extremas(int &Posicion)
+{
+    bool Validacion = false;
+    int Posicion_AñadirTiempo = Posicion;
+
+    if (Posicion == 0 or Posicion == Tamaño-1){
+        cout << "La estacion se ubica en un extremo, por lo tanto el tiempo asociado sera 0 minutos." << endl;
+        Validacion = true;
+        Validacion_Solo_Dos_Estaciones();
+        if (Tamaño > 2){
+            if (Posicion == Tamaño-1){
+                Posicion_AñadirTiempo -=1;
+            }
+            Modificar_TiempoEstaciones(Posicion_AñadirTiempo);
+        }
+    }
+
+    return Validacion;
+}
+
+void Linea::Validacion_Solo_Dos_Estaciones()
+{
+    int Tiempo;
+
+    if (Tamaño == 2){
+        cout << "\nAl solo ser dos estaciones, el tiempo estara asociado a la estacion que ya se encontraba en la linea.";
+        cout << "\nIngrese el tiempo para la estacion " << Linea_[0].Get_Nombre() <<": ";
+        cin >> Tiempo;
+        Linea_[0].Set_Tiempo(Tiempo);
+    }
 }
 
 bool Linea::Validacion_Error3(bool &Transferencia)
@@ -76,7 +108,7 @@ bool Linea::Validacion_Error4_Añadir(int &Posicion)
         cout << "\nTeniendo en cuenta lo siguiente: \n.Ingrese 1 si desea que la estacion se ubique al inicio de la linea.";
         cout << "\n.Ingrese cualquier indice mostrado si desea que la nueva estacion se ubique en esa posicion.";
         cout << "\n.Ingrese el indice mayor + 1 si desea que la nueva estacion se ubique al final de la linea.";
-        cout << "\nSeleeciona la ubicacion de la estacion en la linea: ";
+        cout << "\nSelecciona la ubicacion de la estacion en la linea: ";
         cin >> Posicion;
         cin.clear();
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
@@ -125,11 +157,51 @@ void Linea::Mostrar_Estaciones()
     }
 }
 
+void Linea::Modificar_TiempoEstaciones(int &Posicion_Cambio)
+{
+    int Nuevo_Tiempo;
+
+    cout << "Ingrese el nuevo tiempo asociado a la estacion " <<Linea_[Posicion_Cambio].Get_Nombre() << " ya que esta no es un extremo: ";
+    cin >> Nuevo_Tiempo;
+    cin.clear();
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    Linea_[Posicion_Cambio].Set_Tiempo(Nuevo_Tiempo);
+}
+
+void Linea::Modificar_TiempoEstacionesEliminar(int &Posicion_Cambio)
+{
+    if (Posicion_Cambio == 0 || Posicion_Cambio == Tamaño-1){
+        if (Posicion_Cambio == 0){
+            Linea_[Posicion_Cambio+1].Set_Tiempo(0);
+            Linea_[Posicion_Cambio+2].Set_Tiempo_Eliminar(Linea_[Posicion_Cambio+1].Get_Tiempo());
+        }
+        if (Posicion_Cambio == Tamaño-1){
+            Linea_[Posicion_Cambio-1].Set_Tiempo(0);
+            Linea_[Posicion_Cambio-2].Set_Tiempo_Eliminar(Linea_[Posicion_Cambio+1].Get_Tiempo());
+        }
+    }else{
+        Linea_[Posicion_Cambio-1].Set_Tiempo_Eliminar(Linea_[Posicion_Cambio].Get_Tiempo());
+        Linea_[Posicion_Cambio+1].Set_Tiempo_Eliminar(Linea_[Posicion_Cambio+1].Get_Tiempo());
+    }
+}
+
+void Linea::Mostrar_Estaciones_Linea()
+{
+    cout << endl << "\nEstaciones de transferencia presentes en la linea: "<< endl;
+    int Cont = 1;
+    for (int i = 0; i < Tamaño; i++){
+        if (Linea_[i].Get_Transferencia() == true){
+            cout << Cont <<". " << Linea_[i].Get_Nombre()  << endl;
+        }
+    }
+}
+
 Linea::Linea(string Nombre_Linea, int Tamaño_Linea)
 {
     Nombre = Nombre_Linea;
+
     if (Tamaño_Linea > 0) {
-        Tamaño = Tamaño_Linea;
         Linea_ = new Estacion[Tamaño];
     } else {
         Linea_ = nullptr;
@@ -150,7 +222,6 @@ void Linea::Añadir_Estacion(bool &Termina_Proceso, bool &Es_De_Transferencia, i
 {
     string Nombre_Estacion;
     if(!Validacion_Error1(Nombre_Estacion)){
-        cout << "Continua" << endl;
         if(!Validacion_Error3(Es_De_Transferencia)){
             Validacion_Error4_Añadir(Posicion_Estacion);
                 Tamaño += 1;
@@ -159,7 +230,11 @@ void Linea::Añadir_Estacion(bool &Termina_Proceso, bool &Es_De_Transferencia, i
                     if (i < Posicion_Estacion) {
                         Actualizacion[i] = Linea_[i];
                     }else if (i == Posicion_Estacion) {
+                        if(Validacion_Posiciones_Extremas(Posicion_Estacion)){
+                            Actualizacion[i] = Estacion(Nombre_Estacion, Es_De_Transferencia,0 );
+                        }else{
                         Actualizacion[i] = Estacion(Nombre_Estacion, Es_De_Transferencia);
+                        }
                     }else {
                         Actualizacion[i] = Linea_[i - 1];
                     }
@@ -181,7 +256,11 @@ void Linea::Añadir_Estacion(bool Transferencia, string &Nombre_Estacion_Conexio
         if (i < Posicion_Estacion) {
         Actualizacion[i] = Linea_[i];
         }else if (i == Posicion_Estacion) {
-        Actualizacion[i] = Estacion(Nombre_Estacion_Conexion, Transferencia);
+        if(Validacion_Posiciones_Extremas(Posicion_Estacion)){
+                Actualizacion[i] = Estacion(Nombre_Estacion_Conexion, Transferencia,0 );
+        }else{
+                Actualizacion[i] = Estacion(Nombre_Estacion_Conexion, Transferencia);
+        }
         }else {
         Actualizacion[i] = Linea_[i - 1];
         }

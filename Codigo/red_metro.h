@@ -31,12 +31,11 @@ private:
     void Error7_LineaIngresadaNoHaceParteDeLaRed();
     void Error8_LineaInvalida();
     void Error9_AñadirEstacion_En_LineaAislada();
-    void Error10_LinaaSinEstacionesDeTransferencia();
+    void Error10_LineaSinEstacionesDeTransferencia();
 
     //Funciones de Manejo
     void Mostrar_Lineas();
     void Mostrar_Lineas_Para_Conectar(string &Nombre_Linea_Actual);
-    void Mostrar_Estaciones_Transferencia(Linea &Conexion);
 
     //Para añadirEstacionesTransferencia
     int Buscar_Posicion_Linea(string &Nombre_Linea);
@@ -58,7 +57,6 @@ public:
     //Operaciones con estaciones
     void Añadir_Estacion();
     void Eliminar_Estacion();
-
 
     int Get_Tamaño();
 };
