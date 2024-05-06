@@ -8,7 +8,7 @@ private:
 
     Linea *Metro;
     int Tamaño;
-        bool Primer_Conexion;
+    bool Primer_Conexion;
 
     //Validaciones
     bool Validacion_Error1(Linea &Evaluar);

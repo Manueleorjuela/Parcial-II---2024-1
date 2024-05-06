@@ -44,37 +44,6 @@ bool Linea::Validacion_Linea_Vacia(int Case)
     return Validacion;
 }
 
-bool Linea::Validacion_Posiciones_Extremas(int &Posicion)
-{
-    bool Validacion = false;
-    int Posicion_AñadirTiempo = Posicion;
-
-    if (Posicion == 0 or Posicion == Tamaño-1){
-        cout << "La estacion se ubica en un extremo, por lo tanto el tiempo asociado sera 0 minutos." << endl;
-        Validacion = true;
-        Validacion_Solo_Dos_Estaciones();
-        if (Tamaño > 2){
-            if (Posicion == Tamaño-1){
-                Posicion_AñadirTiempo -=1;
-            }
-            Modificar_TiempoEstaciones(Posicion_AñadirTiempo);
-        }
-    }
-
-    return Validacion;
-}
-
-void Linea::Validacion_Solo_Dos_Estaciones()
-{
-    int Tiempo;
-
-    if (Tamaño == 2){
-        cout << "\nAl solo ser dos estaciones, el tiempo estara asociado a la estacion que ya se encontraba en la linea.";
-        cout << "\nIngrese el tiempo para la estacion " << Linea_[0].Get_Nombre() <<": ";
-        cin >> Tiempo;
-        Linea_[0].Set_Tiempo(Tiempo);
-    }
-}
 
 bool Linea::Validacion_Error3(bool &Transferencia)
 {
@@ -157,33 +126,72 @@ void Linea::Mostrar_Estaciones()
     }
 }
 
-void Linea::Modificar_TiempoEstaciones(int &Posicion_Cambio)
+void Linea::Inicializar_Tiempos(int &Posicion)
 {
-    int Nuevo_Tiempo;
+    int Tiempo_Anterior;
+    int Tiempo_Siguiente;
 
-    cout << "Ingrese el nuevo tiempo asociado a la estacion " <<Linea_[Posicion_Cambio].Get_Nombre() << " ya que esta no es un extremo: ";
-    cin >> Nuevo_Tiempo;
-    cin.clear();
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    cout << Posicion << endl;
+    cout << Tamaño << endl;
 
-    Linea_[Posicion_Cambio].Set_Tiempo(Nuevo_Tiempo);
+
+    if (Tamaño-1 == 0){
+        cout << "Se agrega 0" << endl;
+        Linea_[Posicion].Set_Tiempo_Anterior(0);
+        Linea_[Posicion].Set_Tiempo_Siguiente(0);
+
+        cout << Linea_[Posicion].Get_Nombre() << endl;
+
+
+    }else{
+        if (Posicion == 0){
+            Tiempo_Siguiente = Ingresar_Cambio_Tiempo(1);
+            Linea_[Posicion].Set_Tiempo_Anterior(0);
+            Linea_[Posicion].Set_Tiempo_Siguiente(Tiempo_Siguiente);
+            cout << Linea_[Posicion].Get_Nombre() << endl;
+            Linea_[Posicion+1].Set_Tiempo_Anterior(Tiempo_Siguiente);
+            cout << Linea_[Posicion+1].Get_Nombre() << endl;
+        }
+        if (Posicion == Tamaño-1){
+            cout << "Entra aca" << endl;
+            Tiempo_Anterior = Ingresar_Cambio_Tiempo(2);
+            Linea_[Posicion].Set_Tiempo_Siguiente(0);
+            Linea_[Posicion].Set_Tiempo_Anterior(Tiempo_Anterior);
+            cout << Linea_[Posicion].Get_Nombre() << endl;
+            Linea_[Posicion-1].Set_Tiempo_Siguiente(Tiempo_Anterior);
+            cout << Linea_[Posicion-1].Get_Nombre() << endl;
+        }
+        if (Posicion != 0 && Posicion != Tamaño-1){
+            cout << "Entra aca xd xd" << endl;
+        Tiempo_Siguiente = Ingresar_Cambio_Tiempo(1);
+        Tiempo_Anterior = Ingresar_Cambio_Tiempo(2);
+
+        Linea_[Posicion-1].Set_Tiempo_Siguiente(Tiempo_Anterior);
+        cout << Linea_[Posicion-1].Get_Nombre() << endl;
+        cout << Linea_[Posicion].Get_Nombre() << endl;
+        cout << Linea_[Posicion+1].Get_Nombre() << endl;
+        Linea_[Posicion].Set_Tiempo_Anterior(Tiempo_Anterior);
+        Linea_[Posicion].Set_Tiempo_Siguiente(Tiempo_Siguiente);
+        Linea_[Posicion+1].Set_Tiempo_Anterior(Tiempo_Siguiente);
+        }
+    }
 }
 
-void Linea::Modificar_TiempoEstacionesEliminar(int &Posicion_Cambio)
+int Linea::Ingresar_Cambio_Tiempo(int Case)
 {
-    if (Posicion_Cambio == 0 || Posicion_Cambio == Tamaño-1){
-        if (Posicion_Cambio == 0){
-            Linea_[Posicion_Cambio+1].Set_Tiempo(0);
-            Linea_[Posicion_Cambio+2].Set_Tiempo_Eliminar(Linea_[Posicion_Cambio+1].Get_Tiempo());
-        }
-        if (Posicion_Cambio == Tamaño-1){
-            Linea_[Posicion_Cambio-1].Set_Tiempo(0);
-            Linea_[Posicion_Cambio-2].Set_Tiempo_Eliminar(Linea_[Posicion_Cambio+1].Get_Tiempo());
-        }
-    }else{
-        Linea_[Posicion_Cambio-1].Set_Tiempo_Eliminar(Linea_[Posicion_Cambio].Get_Tiempo());
-        Linea_[Posicion_Cambio+1].Set_Tiempo_Eliminar(Linea_[Posicion_Cambio+1].Get_Tiempo());
+    int Tiempo;
+    switch(Case){
+    case 1:
+        cout << "Ingrese el tiempo que ahora toma ir hacia la estacion siguiente (En minutos): ";
+        break;
+    case 2:
+        cout << "Ingrese el tiempo que ahora toma ir hacia la estacion anterior (En minutos): ";
+        break;
     }
+    cin >> Tiempo;
+    cin.clear();
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    return Tiempo;
 }
 
 void Linea::Mostrar_Estaciones_Linea()
@@ -200,16 +208,19 @@ void Linea::Mostrar_Estaciones_Linea()
 Linea::Linea(string Nombre_Linea, int Tamaño_Linea)
 {
     Nombre = Nombre_Linea;
-
     if (Tamaño_Linea > 0) {
         Linea_ = new Estacion[Tamaño];
     } else {
-        Linea_ = nullptr;
-    }
+        Linea_ = nullptr;}
     Tamaño =  Tamaño_Linea;
-    Linea_Conectada = false;
-
+        Linea_Conectada = false;
 }
+
+Linea::~Linea()
+{
+    if (Tamaño >0) delete[] Linea_;
+}
+
 
 Linea::Linea()
 {
@@ -230,17 +241,14 @@ void Linea::Añadir_Estacion(bool &Termina_Proceso, bool &Es_De_Transferencia, i
                     if (i < Posicion_Estacion) {
                         Actualizacion[i] = Linea_[i];
                     }else if (i == Posicion_Estacion) {
-                        if(Validacion_Posiciones_Extremas(Posicion_Estacion)){
-                            Actualizacion[i] = Estacion(Nombre_Estacion, Es_De_Transferencia,0 );
-                        }else{
-                        Actualizacion[i] = Estacion(Nombre_Estacion, Es_De_Transferencia);
-                        }
+                        Actualizacion[i] = Estacion(Nombre_Estacion, Es_De_Transferencia,0, 0);
                     }else {
                         Actualizacion[i] = Linea_[i - 1];
                     }
-                }
+                }                
                 delete [] Linea_;
                 Linea_ = Actualizacion;
+                Inicializar_Tiempos(Posicion_Estacion);
                 Termina_Proceso = true;
         }
     }
@@ -256,26 +264,25 @@ void Linea::Añadir_Estacion(bool Transferencia, string &Nombre_Estacion_Conexio
         if (i < Posicion_Estacion) {
         Actualizacion[i] = Linea_[i];
         }else if (i == Posicion_Estacion) {
-        if(Validacion_Posiciones_Extremas(Posicion_Estacion)){
-                Actualizacion[i] = Estacion(Nombre_Estacion_Conexion, Transferencia,0 );
-        }else{
-                Actualizacion[i] = Estacion(Nombre_Estacion_Conexion, Transferencia);
-        }
+
+            Actualizacion[i] = Estacion(Nombre_Estacion_Conexion, Transferencia,0,0);
+
         }else {
         Actualizacion[i] = Linea_[i - 1];
         }
     }
     delete [] Linea_;
     Linea_ = Actualizacion;
+    Inicializar_Tiempos(Posicion_Estacion);
 }
 
 void Linea::Eliminar_Estacion()
 {
     int Posicion;
-    Validacion_Error4_Eliminar(Posicion);
-        if(!Validacion_Error2(Posicion)){
-            Tamaño -=1;
+    if(!Validacion_Error4_Eliminar(Posicion)){
+        if(!Validacion_Error2(Posicion)){ 
             if(!Validacion_Linea_Vacia(2)){
+                Tamaño -=1;
                 Estacion *Actualizacion = new Estacion[Tamaño];
                 for (int i = 0; i < Tamaño; i++){
                     if (i < Posicion){
@@ -288,13 +295,14 @@ void Linea::Eliminar_Estacion()
                 Linea_ = Actualizacion;
             }
         }
-
+    }
 }
 
 void Linea::Eliminar_Estacion(int &Posicion_Estacion)
 {
-    Tamaño -=1;
+
     if(!Validacion_Linea_Vacia(2)){
+        Tamaño -=1;
         Estacion *Actualizacion = new Estacion[Tamaño];
         for (int i = 0; i < Tamaño; i++){
             if (i < Posicion_Estacion){
@@ -342,12 +350,6 @@ bool Linea::Get_LineaConectada()
 void Linea::Set_LineaConectada(bool Cambio)
 {
     Linea_Conectada = Cambio;
-}
-
-
-Linea::~Linea()
-{
-    delete[] Linea_;
 }
 
 void Linea::Error1_EstacionRepetida()

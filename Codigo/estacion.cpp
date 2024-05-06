@@ -1,33 +1,20 @@
 #include "estacion.h"
 
 
-void Estacion::Inicializar_Tiempo()
-{
-    cout << "\nIngrese el tiempo aproximado que toma llegar a esta estacion (EN MINUTOS): ";
-    cin >> Tiempo;
-    cin.clear();
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-}
-
-Estacion::Estacion(string Nombre_Estacion, bool Es_No_De_Transferencia)
+Estacion::Estacion(string Nombre_Estacion, bool Es_No_De_Transferencia, int Tiempo_Anterior_, int Tiempo_Siguiente_)
 {
     Nombre = Nombre_Estacion;
     Transferencia = Es_No_De_Transferencia;
-    Inicializar_Tiempo();
-}
-
-Estacion::Estacion(string Nombre_Estacion, bool Es_No_De_Transferencia, int Tiempo_)
-{
-    Nombre = Nombre_Estacion;
-    Transferencia = Es_No_De_Transferencia;
-    Tiempo = Tiempo_;
+    Tiempo_Anterior = Tiempo_Anterior_;
+    Tiempo_Siguiente = Tiempo_Siguiente_;
 }
 
 Estacion::Estacion()
 {
     Nombre = "No tiene nombre";
     Transferencia = false;
-    Tiempo = 0;
+    Tiempo_Anterior = 0;
+    Tiempo_Siguiente = 0;
 }
 
 string Estacion::Get_Nombre()
@@ -40,20 +27,14 @@ bool Estacion::Get_Transferencia()
     return Transferencia;
 }
 
-int Estacion::Get_Tiempo()
+void Estacion::Set_Tiempo_Anterior(int Nuevo_Tiempo)
 {
-    return Tiempo;
+    Tiempo_Anterior = Nuevo_Tiempo;
 }
 
-
-void Estacion::Set_Tiempo(int Nuevo_Tiempo)
+void Estacion::Set_Tiempo_Siguiente(int Nuevo_Tiempo)
 {
-    Tiempo = Nuevo_Tiempo;
-}
-
-void Estacion::Set_Tiempo_Eliminar(int Nuevo_Tiempo)
-{
-    Tiempo += Nuevo_Tiempo;
+    Tiempo_Siguiente = Nuevo_Tiempo;
 }
 
 void Estacion::Set_Transfrencia(bool Cambio)

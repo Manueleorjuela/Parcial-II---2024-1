@@ -18,14 +18,14 @@ private:
     bool Validacion_Error4_Añadir(int &Posicion);
     bool Validacion_Error4_Eliminar(int &Posicion);
     bool Validacion_Linea_Vacia(int Case);
-    bool Validacion_Posiciones_Extremas(int &Posicion);
-    void Validacion_Solo_Dos_Estaciones();
 
     //Funciones de manejo
     void Mostrar_Estaciones();
     void Modificar_TiempoEstaciones(int &Posicion_Cambio);
     void Modificar_TiempoEstacionesEliminar(int &Posicion_Cambio);
 
+    void Inicializar_Tiempos(int& Posicion);
+    int Ingresar_Cambio_Tiempo(int Case);
     //Errores
 
     void Error1_EstacionRepetida();
@@ -37,7 +37,7 @@ public:
 
     Linea();
     Linea(string Nombre_Linea, int Tamaño_Linea);
-        ~Linea();
+    ~Linea();
 
     //Operaciones con estaciones
     void Añadir_Estacion(bool &Termina_Proceso, bool &Transferencia, int& Posicion_Estacion);

@@ -5,23 +5,18 @@
 #include <limits>
 using namespace std;
 
-
 class Estacion
 {
 private:
 
     string Nombre;
     bool Transferencia;
-
-    int Tiempo;
-
-    void Inicializar_Tiempo();
-
+    int Tiempo_Anterior;
+    int Tiempo_Siguiente;
 
 public:
 
-    Estacion(string Nombre_Estacion, bool Es_No_De_Transferencia);
-    Estacion(string Nombre_Estacion, bool Es_No_De_Transferencia, int Tiempo);
+    Estacion(string Nombre_Estacion, bool Es_No_De_Transferencia, int Tiempo_Anterior_, int Tiempo_Siguiente_);
 
     Estacion();
 
@@ -30,8 +25,10 @@ public:
 
     int Get_Tiempo();
 
-    void Set_Tiempo(int Nuevo_Tiempo);
-    void Set_Tiempo_Eliminar(int Nuevo_Tiempo);
+    void Set_Tiempo_Anterior(int Nuevo_Tiempo);
+    void Set_Tiempo_Siguiente(int Nuevo_Tiempo);
+
+
     void Set_Transfrencia(bool Cambio);
     void Set_Nombre(string Nuevo_Nombre);
 

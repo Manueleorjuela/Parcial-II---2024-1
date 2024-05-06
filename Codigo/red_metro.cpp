@@ -54,7 +54,7 @@ void Red_Metro::Validacion_Error9(Linea &Linea, bool &Transferencia, int &Posici
     Estacion *Estaciones = Linea.Get_Linea();
 
 
-    if (Linea.GetTamaño() == 1 && Tamaño > 1 && Transferencia == false && Termina_Proceso == true){
+    if ((Linea.GetTamaño() == 1 && Tamaño > 1 && Transferencia == false && Termina_Proceso == true)){
         Error9_AñadirEstacion_En_LineaAislada();
         Transferencia = true;
         Estaciones[Posicion_Estacion_Actual].Set_Transfrencia(true);
@@ -196,9 +196,9 @@ void Red_Metro::Añadir_Estacion()
         int Posicion;
         if(!Validacion_Error4(Posicion)){
             Metro[Posicion].Añadir_Estacion(Termina_Proceso, Transferencia, Posicion_Estacion_Actual);
+
             Nombre_LineaActual = Metro[Posicion].Get_Nombre();
             Validacion_Error9(Metro[Posicion], Transferencia, Posicion_Estacion_Actual, Termina_Proceso);
-
             if(Transferencia){
             Estacion_Transferencia_Establecida(Metro[Posicion], Posicion_Estacion_Actual, Nombre_LineaActual);
             }
@@ -260,6 +260,7 @@ void Red_Metro::Eliminar_Estacion()
         int Posicion ;
         if (!Validacion_Error4(Posicion)){
             if (!Validacion_Error1(Metro[Posicion])){
+
                 Metro[Posicion].Eliminar_Estacion();
             }
         }
@@ -299,6 +300,7 @@ void Red_Metro::Añadir_Linea()
         Actualizacion = new Linea[Tamaño];
         copy(Metro, Metro + Tamaño - 1, Actualizacion);
         delete[] Metro;
+
         Actualizacion[Tamaño - 1] = Linea(Nombre_Linea, 0);
         Metro = Actualizacion;
     }
@@ -306,13 +308,14 @@ void Red_Metro::Añadir_Linea()
 
 void Red_Metro::Eliminar_Linea()
 {
-    Linea * Actualizacion;
+    Linea *Actualizacion;
     if (!Validacion_Error3(1)){
         int Posicion;
         if(!Validacion_Error4(Posicion)){
             if (!Validacion_Error2(Metro[Posicion])){
                 Tamaño -=1;
                 if(!Validacion_Error3(2)){
+
                     Actualizacion = new Linea[Tamaño];
                     for (int j = 0; j < Tamaño; j++){
                         if (j < Posicion){
@@ -382,7 +385,7 @@ void Red_Metro::Error5_NombreLineaRepetido()
 void Red_Metro::Error6_CrearEstacionTransConUnaSolaLinea()
 {
     try {
-        throw runtime_error("\nNo puede crearse una estacion de transferencia si hay una sola linea.");
+        throw runtime_error("No puede crearse una estacion de transferencia si hay una sola linea.");
     } catch (const runtime_error& ex) {
         cout << "Error: " << ex.what() << endl;
     }
