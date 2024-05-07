@@ -131,49 +131,45 @@ void Linea::Inicializar_Tiempos(int &Posicion)
     int Tiempo_Anterior;
     int Tiempo_Siguiente;
 
-    cout << Posicion << endl;
-    cout << Tamaño << endl;
-
 
     if (Tamaño-1 == 0){
-        cout << "Se agrega 0" << endl;
         Linea_[Posicion].Set_Tiempo_Anterior(0);
         Linea_[Posicion].Set_Tiempo_Siguiente(0);
-
-        cout << Linea_[Posicion].Get_Nombre() << endl;
-
-
     }else{
         if (Posicion == 0){
             Tiempo_Siguiente = Ingresar_Cambio_Tiempo(1);
             Linea_[Posicion].Set_Tiempo_Anterior(0);
             Linea_[Posicion].Set_Tiempo_Siguiente(Tiempo_Siguiente);
-            cout << Linea_[Posicion].Get_Nombre() << endl;
             Linea_[Posicion+1].Set_Tiempo_Anterior(Tiempo_Siguiente);
-            cout << Linea_[Posicion+1].Get_Nombre() << endl;
-        }
-        if (Posicion == Tamaño-1){
-            cout << "Entra aca" << endl;
+        }else if (Posicion == Tamaño-1){
             Tiempo_Anterior = Ingresar_Cambio_Tiempo(2);
             Linea_[Posicion].Set_Tiempo_Siguiente(0);
             Linea_[Posicion].Set_Tiempo_Anterior(Tiempo_Anterior);
-            cout << Linea_[Posicion].Get_Nombre() << endl;
             Linea_[Posicion-1].Set_Tiempo_Siguiente(Tiempo_Anterior);
-            cout << Linea_[Posicion-1].Get_Nombre() << endl;
         }
         if (Posicion != 0 && Posicion != Tamaño-1){
-            cout << "Entra aca xd xd" << endl;
         Tiempo_Siguiente = Ingresar_Cambio_Tiempo(1);
         Tiempo_Anterior = Ingresar_Cambio_Tiempo(2);
 
         Linea_[Posicion-1].Set_Tiempo_Siguiente(Tiempo_Anterior);
-        cout << Linea_[Posicion-1].Get_Nombre() << endl;
-        cout << Linea_[Posicion].Get_Nombre() << endl;
-        cout << Linea_[Posicion+1].Get_Nombre() << endl;
         Linea_[Posicion].Set_Tiempo_Anterior(Tiempo_Anterior);
         Linea_[Posicion].Set_Tiempo_Siguiente(Tiempo_Siguiente);
         Linea_[Posicion+1].Set_Tiempo_Anterior(Tiempo_Siguiente);
         }
+    }
+}
+
+void Linea::Eliminar_Tiempos(int &Posicion)
+{
+    int Nuevo_Tiempo;
+
+    if (Tamaño == 1){
+        Linea_[Posicion].Set_Tiempo_Anterior(0);
+        Linea_[Posicion].Set_Tiempo_Siguiente(0);
+    }else if (Tamaño > 1){
+        Nuevo_Tiempo = (Linea_[Posicion].Get_Tiempo_Siguiente() + Linea_[Posicion].Get_Tiempo_Anterior())/2;
+        Linea_[Posicion-1].Set_Tiempo_Siguiente(Nuevo_Tiempo);
+        Linea_[Posicion+1].Set_Tiempo_Anterior(Nuevo_Tiempo);
     }
 }
 
@@ -194,6 +190,23 @@ int Linea::Ingresar_Cambio_Tiempo(int Case)
     return Tiempo;
 }
 
+void Linea::Calcular_Tiempo_Caso(int &Posicion_Inicio, int &Posicion_Llegada, int &Tiempo)
+{
+
+    for (int i = Posicion_Inicio; i < Posicion_Llegada; i++){
+        Tiempo += Linea_[i].Get_Tiempo_Siguiente();
+    }
+}
+
+void Linea::Operar_Tiempo(int &Hora, int &Minuto, int &Tiempo)
+{
+    Minuto += Tiempo;
+    if(Minuto >= 60){
+        Hora+=1;
+        Minuto = Minuto+1 - 60;
+    }
+}
+
 void Linea::Mostrar_Estaciones_Linea()
 {
     cout << endl << "\nEstaciones de transferencia presentes en la linea: "<< endl;
@@ -203,6 +216,39 @@ void Linea::Mostrar_Estaciones_Linea()
             cout << Cont <<". " << Linea_[i].Get_Nombre()  << endl;
         }
     }
+}
+
+void Linea::Calcular_Tiempo_Entre_Estaciones()
+{
+    int Estacion_Inicio;
+    int Estacion_Llegada;
+    cout << "\nEstacion de salida. ";
+    Validacion_Error4_Eliminar(Estacion_Inicio);
+     cout << "\nEstacion de llegada. ";
+    Validacion_Error4_Eliminar(Estacion_Llegada);
+
+    int Tiempo_Aproximado = 0;
+    if (Estacion_Inicio > Estacion_Llegada){
+
+        int Aux = Estacion_Llegada;
+        Estacion_Llegada = Estacion_Inicio;
+        Estacion_Inicio = Aux;
+    }
+
+
+    Calcular_Tiempo_Caso(Estacion_Inicio, Estacion_Llegada, Tiempo_Aproximado);
+
+
+    auto tiempo_actual = chrono::system_clock::now();
+    time_t tiempo_actual_t = chrono::system_clock::to_time_t(tiempo_actual);
+    tm *tiempo_local = localtime(&tiempo_actual_t);
+
+    int Hora = tiempo_local->tm_hour;
+    int Minuto = tiempo_local->tm_min;
+    Operar_Tiempo(Hora, Minuto, Tiempo_Aproximado);
+    cout << "La hora aproximada de llegada desde estacion " << Linea_[Estacion_Inicio].Get_Nombre();
+    cout << " hasta estacion " << Linea_[Estacion_Llegada].Get_Nombre();
+    cout << " es " << Hora << ":" << Minuto <<"." << endl;
 }
 
 Linea::Linea(string Nombre_Linea, int Tamaño_Linea)
@@ -283,6 +329,7 @@ void Linea::Eliminar_Estacion()
         if(!Validacion_Error2(Posicion)){ 
             if(!Validacion_Linea_Vacia(2)){
                 Tamaño -=1;
+                Eliminar_Tiempos(Posicion);
                 Estacion *Actualizacion = new Estacion[Tamaño];
                 for (int i = 0; i < Tamaño; i++){
                     if (i < Posicion){

@@ -23,11 +23,11 @@ public:
     string Get_Nombre();
     bool Get_Transferencia();
 
-    int Get_Tiempo();
+    int Get_Tiempo_Anterior();
+    int Get_Tiempo_Siguiente();
 
     void Set_Tiempo_Anterior(int Nuevo_Tiempo);
     void Set_Tiempo_Siguiente(int Nuevo_Tiempo);
-
 
     void Set_Transfrencia(bool Cambio);
     void Set_Nombre(string Nuevo_Nombre);

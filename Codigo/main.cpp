@@ -36,7 +36,11 @@ int main()
         case 7:
             system("cls");
             break;
+        case 8:
+            Metro.Calcular_Tiempo_Estaciones();
+            break;
         }
+
         cout << endl;
     }
 }

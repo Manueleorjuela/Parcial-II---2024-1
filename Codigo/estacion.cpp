@@ -27,6 +27,16 @@ bool Estacion::Get_Transferencia()
     return Transferencia;
 }
 
+int Estacion::Get_Tiempo_Anterior()
+{
+    return Tiempo_Anterior;
+}
+
+int Estacion::Get_Tiempo_Siguiente()
+{
+    return Tiempo_Siguiente;
+}
+
 void Estacion::Set_Tiempo_Anterior(int Nuevo_Tiempo)
 {
     Tiempo_Anterior = Nuevo_Tiempo;

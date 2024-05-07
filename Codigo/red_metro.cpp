@@ -144,7 +144,9 @@ void Red_Metro::Realizar_Conexion(Linea &Actual, Linea &Conectar, int &Pos_Estac
     cout << "\nDe acuerdo a lo siguiente: ";
     cout << "\n1. Si desea que la estacion de transferencia se cree en la linea para conectar.";
     cout << "\n2. Si desea que la estacion de transferencia este asociada a otra en la linea que desea realizar la conexion." << endl;
-    cout << "\nIngrese una opcion: "; cin >> Opcion;
+    cout << "Ingrese una opcion: "; cin >> Opcion;
+
+
     switch(Opcion){
         case 1:
             Conectar_EstacionNueva(Actual_, Pos_Estacion_Actual, Conectar, Actual);
@@ -162,6 +164,8 @@ void Red_Metro::Realizar_Conexion(Linea &Actual, Linea &Conectar, int &Pos_Estac
             Conectar_EstacionNueva(Actual_, Pos_Estacion_Actual, Conectar, Actual);
             break;
         }
+    cin.clear();
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
 }
 
 void Red_Metro::Conectar_EstacionNueva(Estacion *Estaciones, int &Pos_Estacion_Actual, Linea &Conectar, Linea &Actual)
@@ -249,6 +253,19 @@ void Red_Metro::Mostrar_Lineas_Para_Conectar(string &Nombre_Linea_Actual)
         if (Nombre_Linea_Actual != Metro[i].Get_Nombre()){
             cout << Cont <<". " << Metro[i].Get_Nombre() << endl;
             Cont++;
+        }
+    }
+}
+
+void Red_Metro::Calcular_Tiempo_Estaciones()
+{
+    if (!Validacion_Error3(1)){
+        int Posicion ;
+        if (!Validacion_Error4(Posicion)){
+            if (!Validacion_Error1(Metro[Posicion])){
+
+            Metro[Posicion].Calcular_Tiempo_Entre_Estaciones();
+            }
         }
     }
 }

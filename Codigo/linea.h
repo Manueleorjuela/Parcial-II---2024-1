@@ -1,6 +1,8 @@
 #ifndef LINEA_H
 #define LINEA_H
 #include "estacion.h"
+#include <chrono>
+#include <ctime>
 
 class Linea
 {
@@ -21,13 +23,14 @@ private:
 
     //Funciones de manejo
     void Mostrar_Estaciones();
-    void Modificar_TiempoEstaciones(int &Posicion_Cambio);
-    void Modificar_TiempoEstacionesEliminar(int &Posicion_Cambio);
-
     void Inicializar_Tiempos(int& Posicion);
+    void Eliminar_Tiempos(int& Posicion);
     int Ingresar_Cambio_Tiempo(int Case);
-    //Errores
 
+    void Calcular_Tiempo_Caso(int &Posicion_Inicio, int &Posicion_Llegada, int &Tiempo);;
+    void Operar_Tiempo(int& Hora, int& Minuto, int& Tiempo);
+
+    //Errores
     void Error1_EstacionRepetida();
     void Error2_EstacionDeTransferenciaEncontrada();
     void Error3_RequerimientoTransferenciaInvalido();
@@ -48,6 +51,8 @@ public:
 
     int Cantidad_Estaciones_Transferencia();
     void Mostrar_Estaciones_Linea();
+
+    void Calcular_Tiempo_Entre_Estaciones();
 
     int GetTamaño();
     string Get_Nombre();

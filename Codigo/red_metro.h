@@ -20,7 +20,6 @@ private:
     bool Validacion_Error7(string &Nombre_LineaConectar, int& Posicion_Estacion, Linea &Linea, string &Nombre_LineaActual);
     void Validacion_Error9(Linea &Linea, bool& Transferencia, int &Posicion_Estacion, bool& Termina_Proceso);
 
-
     //Errores
     void Error1_LineaVacia();
     void Error2_EstacionTransferenciaEncontrada();
@@ -57,6 +56,7 @@ public:
     //Operaciones con estaciones
     void Añadir_Estacion();
     void Eliminar_Estacion();
+    void Calcular_Tiempo_Estaciones();
 
     int Get_Tamaño();
 };
