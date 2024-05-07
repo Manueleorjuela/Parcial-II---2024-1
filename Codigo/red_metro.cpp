@@ -270,6 +270,46 @@ void Red_Metro::Calcular_Tiempo_Estaciones()
     }
 }
 
+void Red_Metro::Estacion_Pertenece_A_Linea_Especifica()
+{
+    if (!Validacion_Error3(1)){
+        int Posicion ;
+        if (!Validacion_Error4(Posicion)){
+            if (!Validacion_Error1(Metro[Posicion])){
+            Metro[Posicion].Estacion_Especifica_Pertenece_Linea();
+            }
+        }
+    }
+}
+
+void Red_Metro::Cantidad_Estaciones_Red_Metro()
+{
+    int Contador_Linea_Conectada = 0;
+    int Contador_Estaciones = 0;
+
+    if (!Validacion_Error3(1)){
+        for (int i = 0; i < Tamaño; i++){
+            Contador_Estaciones += Metro[i].GetTamaño();
+            if (Metro[i].Get_LineaConectada() == true){
+                Contador_Linea_Conectada ++;
+            }
+        }
+    }
+    Contador_Estaciones = Contador_Estaciones - (Contador_Linea_Conectada-1);
+    cout << "En la red hay " << Contador_Estaciones << " estaciones." << endl;
+}
+
+void Red_Metro::Cantidad_Estaciones_Linea()
+{
+    if (!Validacion_Error3(1)){
+        int Posicion ;
+        if (!Validacion_Error4(Posicion)){
+            if (!Validacion_Error1(Metro[Posicion])){
+                cout << "La linea tiene " << Metro[Posicion].GetTamaño() << " estaciones.";
+            }
+        }
+    }
+}
 
 void Red_Metro::Eliminar_Estacion()
 {
@@ -351,6 +391,7 @@ void Red_Metro::Eliminar_Linea()
 
 int Red_Metro::Get_Tamaño()
 {
+    cout << "\nLa red tiene la siguiente cantidad de lineas: ";
     return Tamaño;
 }
 

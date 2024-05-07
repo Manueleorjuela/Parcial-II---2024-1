@@ -218,6 +218,27 @@ void Linea::Mostrar_Estaciones_Linea()
     }
 }
 
+void Linea::Estacion_Especifica_Pertenece_Linea()
+{
+    bool Pertenece = false;
+    string Nombre_Estacion;
+    cout << "\nTeniendo en cuenta lo siguiente: ";
+    cout <<"\nSi la estacion es de transferencia, coloque el nombre de la linea al final.";
+    cout << "\nIngrese el nombre de la estacion: ";
+    getline(cin, Nombre_Estacion);
+
+    for (int  i = 0; i < Tamaño; i++){
+        if (Linea_[i].Get_Nombre() == Nombre_Estacion){
+            Pertenece = true;
+        }
+    }
+    if (Pertenece){
+        cout << "La estacion " << Nombre_Estacion << " hace parte de la linea." << endl;
+    }else{
+        cout << "La estacion " << Nombre_Estacion << " no hace parte de la linea." << endl;
+    }
+}
+
 void Linea::Calcular_Tiempo_Entre_Estaciones()
 {
     int Estacion_Inicio;
@@ -264,7 +285,7 @@ Linea::Linea(string Nombre_Linea, int Tamaño_Linea)
 
 Linea::~Linea()
 {
-    if (Tamaño >0) delete[] Linea_;
+    delete[] Linea_;
 }
 
 

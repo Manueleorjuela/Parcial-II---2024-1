@@ -52,6 +52,7 @@ public:
     int Cantidad_Estaciones_Transferencia();
     void Mostrar_Estaciones_Linea();
 
+    void Estacion_Especifica_Pertenece_Linea();
     void Calcular_Tiempo_Entre_Estaciones();
 
     int GetTamaño();

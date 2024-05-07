@@ -57,6 +57,9 @@ public:
     void Añadir_Estacion();
     void Eliminar_Estacion();
     void Calcular_Tiempo_Estaciones();
+    void Estacion_Pertenece_A_Linea_Especifica();
+    void Cantidad_Estaciones_Red_Metro();
+    void Cantidad_Estaciones_Linea();
 
     int Get_Tamaño();
 };
